@@ -36,25 +36,25 @@ Route::get('/login', function () {
 
 //Procesar login
 
-Route::post('/login-process', function (Request $request) {
+Route::post('/login-procesar', function (Request $request) { //request -> para obtener los datos del formulario
 
     // Obtener datos del formulario
-    $email = $request->email;
-    $password = $request->password;
+    $email = $request->email; //obtener email
+    $password = $request->password; //obtener contraseña
 
     // Buscar usuario por email
-    $user = DB::table('users')
+    $user = DB::table('users') //Consulta a la tabla users
         ->where('email', $email)
         ->first();
 
     // Verificar si existe el usuario
     if (!$user) {
-        return back()->with('error', 'Usuario no encontrado');
+        return back()->with('error', 'Usuario no encontrado'); //redirecciona a la misma pagina con un mensaje de error
     }
 
     // Verificar contraseña
     if (!password_verify($password, $user->password)) {
-        return back()->with('error', 'Contraseña incorrecta');
+        return back()->with('error', 'Contraseña incorrecta'); //redirecciona a la misma pagina con un mensaje de error
     }
 
     // Crear sesión
@@ -75,7 +75,7 @@ Route::post('/login-process', function (Request $request) {
 Route::get('/inicio', function () {
 
     // Verificar si hay sesión
-    if (!session()->has('user_id')) {
+    if (!session()->has('user_id')) { // Si no hay sesión redirige a login
         return redirect('/login');
     }
 
@@ -110,4 +110,18 @@ Route::get('/admin', function () {
 Route::get('/logout', function () {
     session()->flush(); // borra toda la sesión
     return redirect('/login');
+});
+
+//Rutas por cada rol
+
+Route::get('/admin/home', function () {
+    return view('admin.home');
+});
+
+Route::get('/docente/home', function () {
+    return view('docente.home');
+});
+
+Route::get('/estudiante/home', function () {
+    return view('estudiante.home');
 });
