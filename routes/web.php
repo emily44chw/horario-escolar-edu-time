@@ -1,18 +1,113 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| RUTAS DEL SISTEMA DE HORARIO ESCOLAR
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
+| Aquí se definen las direcciones que el usuario puede visitar
+| y qué acción se ejecuta en cada una.
 */
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+//Formulario de login
+
+Route::get('/login', function () {
+
+    return '
+        <h2>Login</h2>
+
+        <form method="POST" action="/login-procesar">  <!-- El formulario tendra el metodo Post para enviar los datos ocultos y como accion el de procesar la informacion almacenada --> 
+            <input type="hidden" name="_token" value="' . csrf_token() . '"> <!-- _token ->seguridad -->
+
+            <input type="email" name="email" placeholder="ejemplo@vr.edu.ec"><br><br>
+            <input type="password" name="password" placeholder="Contraseña"><br><br>
+
+            <button type="submit">Ingresar</button>
+        </form>
+    ';
+});
+
+//Procesar login
+
+Route::post('/login-process', function (Request $request) {
+
+    // Obtener datos del formulario
+    $email = $request->email;
+    $password = $request->password;
+
+    // Buscar usuario por email
+    $user = DB::table('users')
+        ->where('email', $email)
+        ->first();
+
+    // Verificar si existe el usuario
+    if (!$user) {
+        return back()->with('error', 'Usuario no encontrado');
+    }
+
+    // Verificar contraseña
+    if (!password_verify($password, $user->password)) {
+        return back()->with('error', 'Contraseña incorrecta');
+    }
+
+    // Crear sesión
+    Session::put('user_id', $user->id);
+    Session::put('user_rol', $user->rol);
+    Session::put('user_name', $user->name);
+
+    // Redirigir según rol
+    if ($user->rol == 'admin') {
+        return redirect('/admin/home');
+    } elseif ($user->rol == 'docente') {
+        return redirect('/docente/home');
+    } else {
+        return redirect('/estudiante/home');
+    }
+});
+
+Route::get('/inicio', function () {
+
+    // Verificar si hay sesión
+    if (!session()->has('user_id')) {
+        return redirect('/login');
+    }
+
+    return '
+        <h1>Bienvenido ' . session('name') . '</h1>
+        <p>Rol: ' . session('rol') . '</p>
+
+        <a href="/admin">Panel Admin</a><br><br>
+        <a href="/logout">Cerrar sesión</a>
+    ';
+});
+
+Route::get('/admin', function () {
+
+    if (!session()->has('user_id')) {
+        return 'No has iniciado sesión';
+    }
+
+    if (session('rol') !== 'admin') {
+        return 'Acceso solo para administrador';
+    }
+
+    return '
+        <h2>Panel de Administrador</h2>
+        <ul>
+            <li><a href="/docentes">Gestionar Docentes</a></li>
+            <li><a href="/estudiantes">Gestionar Estudiantes</a></li>
+        </ul>
+    ';
+});
+
+Route::get('/logout', function () {
+    session()->flush(); // borra toda la sesión
+    return redirect('/login');
 });
