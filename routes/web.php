@@ -125,3 +125,10 @@ Route::get('/docente/home', function () {
 Route::get('/estudiante/home', function () {
     return view('estudiante.home');
 });
+
+//Ruta - horario
+Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'role:admin']);
+Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse']);
+Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots']);
+Route::post('schedules/store', [ScheduleController::class, 'store']);
+Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule']);
