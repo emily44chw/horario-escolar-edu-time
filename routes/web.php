@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
+use App\Http\Controllers\ScheduleController;
 /*
 |--------------------------------------------------------------------------
 | RUTAS DEL SISTEMA DE HORARIO ESCOLAR

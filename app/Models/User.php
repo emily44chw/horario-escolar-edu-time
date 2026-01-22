@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // Agregado: para roles (admin, profesor, alumno)
     ];
 
     /**
@@ -42,4 +43,37 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Relaciones
+     */
+    // Si es profesor, puede tener muchos horarios
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'teacher_id');
+    }
+
+    // Many-to-many con asignaturas (si es profesor)
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'subject_teacher');
+    }
+
+    /**
+     * Métodos auxiliares
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isTeacher()
+    {
+        return $this->role === 'profesor';
+    }
+
+    public function isStudent()
+    {
+        return $this->role === 'alumno';
+    }
 }

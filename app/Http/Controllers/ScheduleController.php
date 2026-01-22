@@ -14,14 +14,14 @@ class ScheduleController extends Controller
     // Constructor para proteger con middleware (solo admin)
     public function __construct()
     {
-        $this->middleware(['auth', 'role:admin']); // Asume que tienes un middleware 'role' para admin
+        $this->middleware(['auth', 'role:admin']); // Se asume que poseo un middleware 'role' para admin
     }
 
-    // Método para mostrar la vista de creación de horarios
+    // Metodo para mostrar la vista de creacion de horarios
     public function create()
     {
-        // Obtener cursos disponibles para la lista desplegable
-        $courses = Course::all(); // Asume que Course::all() trae los cursos registrados
+        // Obtener cursos disponibles para mostrar en lista desplegable
+        $courses = Course::all(); // Course::all() trae los cursos registrados
 
         return view('admin.schedules.create', compact('courses'));
     }
