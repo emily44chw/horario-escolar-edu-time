@@ -97,6 +97,15 @@ Route::get('/estudiante/home', function () {
 });
 
 
+//CRUD 
+
+//Rutas para listar docentes
+
+Route::get('admin/docentes', function () {
+    require public_path('admin/docentes/index.php');
+});
+
+
 //Ruta - horario
 Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'rol:admin']);
 Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse']);
