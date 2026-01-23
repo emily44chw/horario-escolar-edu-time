@@ -31,7 +31,10 @@ if (Session::get('user_rol') !== 'estudiante') {
     <h1>Home Estudiante</h1>
     <p>Bienvenido estudiante</p>
     <br><br>
-    <a href="/logout">Cerrar sesión</a>
+    <button onclick="window.location.href='/logout'">
+        Cerrar sesión
+    </button>
+
 </body>
 
 </html>
