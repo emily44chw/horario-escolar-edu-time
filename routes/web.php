@@ -38,29 +38,35 @@ Route::get('/login', function () {
 
 Route::post('/login-procesar', function (Request $request) { //request -> para obtener los datos del formulario
 
-    // Obtener datos del formulario
-    $email = $request->email; //obtener email
-    $password = $request->password; //obtener contraseña
+    $email = $_POST['email'] ?? null;
+    $password = $_POST['password'] ?? null;
 
-    // Buscar usuario por email
-    $user = DB::table('users') //Consulta a la tabla users
+    // Validar que lleguen datos
+    if (!$email || !$password) {
+        echo "Datos incompletos";
+        exit;
+    }
+
+    //Buscar usuario
+    $user = DB::table('users')
         ->where('email', $email)
         ->first();
 
-    // Verificar si existe el usuario
     if (!$user) {
-        return back()->with('error', 'Usuario no encontrado'); //redirecciona a la misma pagina con un mensaje de error
+        return back()->with('error', 'Usuario no encontrado');
     }
 
-    // Verificar contraseña
+    //Verificar contraseña
     if (!password_verify($password, $user->password)) {
-        return back()->with('error', 'Contraseña incorrecta'); //redirecciona a la misma pagina con un mensaje de error
+        return back()->with('error', "Datos incorrectos");
+        exit;
     }
+
 
     // Crear sesión
-    Session::put('user_id', $user->id);
-    Session::put('user_rol', $user->rol);
-    Session::put('user_name', $user->name);
+    Session::put('user_id', $user->id); //almacenar id del usuario en la sesion
+    Session::put('user_rol', $user->rol); //almacenar rol del usuario en la sesion
+    Session::put('user_name', $user->name); //almacenar nombre del usuario en la sesion
 
     // Redirigir según rol
     if ($user->rol == 'admin') {
@@ -115,19 +121,20 @@ Route::get('/logout', function () {
 //Rutas por cada rol
 
 Route::get('/admin/home', function () {
-    return view('admin.home');
+    require public_path('admin/home.php');
 });
 
 Route::get('/docente/home', function () {
-    return view('docente.home');
+    require public_path('docente/home.php');
 });
 
 Route::get('/estudiante/home', function () {
-    return view('estudiante.home');
+    require public_path('estudiante/home.php');
 });
 
+
 //Ruta - horario
-Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'role:admin']);
+Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'rol:admin']);
 Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse']);
 Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots']);
 Route::post('schedules/store', [ScheduleController::class, 'store']);
