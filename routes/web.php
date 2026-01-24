@@ -1,108 +1,59 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\Admin\DocenteController as AdminDocente;
+use App\Http\Controllers\Admin\EstudianteController as AdminEstudiante;
 use App\Http\Controllers\ScheduleController;
-
 /*
 |--------------------------------------------------------------------------
-| RUTAS DEL SISTEMA DE HORARIO ESCOLAR
+| Rutas Web
 |--------------------------------------------------------------------------
-| Aquí se definen las direcciones que el usuario puede visitar
-| y qué acción se ejecuta en cada una.
 */
 
+// Ruta raíz
+
 Route::get('/', function () {
-    return view('welcome');
-});
-
-//Formulario de login
-
-Route::get('/login', function () {
-    require public_path('login.php');
-});
-
-
-//Procesar login
-
-Route::post('/login-procesar', function (Request $request) { //request -> para obtener los datos del formulario
-
-    $email = $_POST['email'] ?? null; // Obtener email del formulario
-    $password = $_POST['password'] ?? null; // Obtener contraseña del formulario
-
-
-    $user = DB::table('users')
-        ->where('email', $email)
-        ->first();
-
-    if (!$user) {
-        return redirect('/login?error=email');
-    }
-
-    if (!password_verify($password, $user->password)) {
-        return redirect('/login?error=password');
-    }
-
-
-    // Crear sesión
-    Session::put('user_id', $user->id); //almacenar id del usuario en la sesion
-    Session::put('user_rol', $user->rol); //almacenar rol del usuario en la sesion
-    Session::put('user_name', $user->name); //almacenar nombre del usuario en la sesion
-
-    if ($user && password_verify($password, $user->password)) {
-
-        // Redirigir según rol
-        return redirect('/' . $user->rol . '/home');
-    }
-
     return redirect('/login');
 });
 
-Route::get('/admin', function () {
+// Autenticación
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    if (!session()->has('user_id')) {
-        return 'No has iniciado sesión';
-    }
+// Rutas protegidas
+Route::middleware(['auth'])->group(function () {
 
-    if (session('rol') !== 'admin') {
-        return 'Acceso solo para administrador';
-    }
+    // Home por rol
+    Route::get('/admin/home', [AdminController::class, 'index'])->name('admin.home');
+    Route::get('/teacher/home', [DocenteController::class, 'index'])->name('teacher.home');
+    Route::get('/student/home', [EstudianteController::class, 'index'])->name('student.home');
 
-    ;
-});
+    // CRUD Docentes
+    Route::resource('admin/docentes', AdminDocente::class)->names([
+        'index' => 'admin.docentes.index',
+        'create' => 'admin.docentes.create',
+        'store' => 'admin.docentes.store',
+        'show' => 'admin.docentes.show',
+        'edit' => 'admin.docentes.edit',
+        'update' => 'admin.docentes.update',
+        'destroy' => 'admin.docentes.destroy',
+    ]);
 
-Route::get('/logout', function () {
-    session()->flush(); // borra toda la sesión
-    echo "<script>
-        alert('Sesión cerrada correctamente');
-        window.location.href = '/login';
-      </script>";
-    exit;
-
-});
-
-//Rutas por cada rol
-
-Route::get('/admin/home', function () {
-    require public_path('admin/home.php');
-});
-
-Route::get('/docente/home', function () {
-    require public_path('docente/home.php');
-});
-
-Route::get('/estudiante/home', function () {
-    require public_path('estudiante/home.php');
-});
-
-
-//CRUD 
-
-//Rutas para listar docentes
-
-Route::get('admin/docentes', function () {
-    require public_path('admin/docentes/index.php');
+    // CRUD Estudiantes
+    Route::resource('admin/estudiantes', AdminEstudiante::class)->names([
+        'index' => 'admin.estudiantes.index',
+        'create' => 'admin.estudiantes.create',
+        'store' => 'admin.estudiantes.store',
+        'show' => 'admin.estudiantes.show',
+        'edit' => 'admin.estudiantes.edit',
+        'update' => 'admin.estudiantes.update',
+        'destroy' => 'admin.estudiantes.destroy',
+    ]);
 });
 
 
