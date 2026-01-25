@@ -48,7 +48,7 @@ class DocenteController extends Controller
         // Crear docente asociado
         Teacher::create([
             'user_id' => $user->id,
-            'first_name' => strtolower(trim($request->email)),
+            'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'status' => 'activo',

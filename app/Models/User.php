@@ -25,4 +25,10 @@ class User extends Authenticatable
         return $this->hasOne(Teacher::class);
     }
 
+    // Relación uno a uno con Students
+    public function student()
+    {
+        return $this->hasOne(Students::class);
+    }
+
 }
