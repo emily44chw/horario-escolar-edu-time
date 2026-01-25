@@ -30,8 +30,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Home por rol
     Route::get('/admin/home', [AdminController::class, 'index'])->name('admin.home');
-    Route::get('/teacher/home', [DocenteController::class, 'index'])->name('teacher.home');
-    Route::get('/student/home', [EstudianteController::class, 'index'])->name('student.home');
+    Route::get('/docente/home', [DocenteController::class, 'index'])->name('docente.home');
+    Route::get('/estudiante/home', [EstudianteController::class, 'index'])->name('estudiante.home');
 
     // CRUD Docentes
     Route::resource('admin/docentes', AdminDocente::class)->names([

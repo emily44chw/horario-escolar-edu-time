@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Bienvenido Estudiante {{ auth()->user()->name }}</h1>
-    <p>Aquí puedes ver tus horarios y clases.</p>
+    <h1>Bienvenido Docente {{ auth()->user()->name }}</h1>
+    <p>Aquí puedes gestionar tus clases y horarios.</p>
     <ul>
-        <li><a href="#">Ver Horarios</a></li>
-        <li><a href="#">Ver Cursos</a></li>
+        <li><a href="#">Ver Horarios Asignados</a></li>
+        <li><a href="#">Ver Asignaturas</a></li>
     </ul>
     <form action="{{ route('logout') }}" method="POST">
         @csrf
