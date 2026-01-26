@@ -8,6 +8,7 @@ use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\Admin\DocenteController as AdminDocente;
 use App\Http\Controllers\Admin\EstudianteController as AdminEstudiante;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\Admin\HorariosController;
 /*
 |--------------------------------------------------------------------------
 | Rutas Web
@@ -58,8 +59,15 @@ Route::middleware(['auth'])->group(function () {
 
 
 //Ruta - horario
-Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'rol:admin']);
+Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'role:admin']);
 Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse']);
 Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots']);
 Route::post('schedules/store', [ScheduleController::class, 'store']);
 Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule']);
+
+//rutas para navegacion de horarios (admin)
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('horarios', [HorariosController::class, 'index'])->name('admin.horarios.index');
+    Route::get('horarios/crear', [HorariosController::class, 'create'])->name('admin.horarios.create');
+    Route::get('horarios/creaciones', [HorariosController::class, 'list'])->name('admin.horarios.list');
+});

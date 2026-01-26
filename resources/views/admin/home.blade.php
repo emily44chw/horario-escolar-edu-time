@@ -5,6 +5,8 @@
     <br>
     <li><a href="{{ route('admin.estudiantes.index') }}">Gestionar Estudiantes</a></li>
     <br>
+    <li><a href="{{ route('admin.horarios.index') }}">Horarios</a></li>
+    <br>
 
     <form action="{{ route('logout') }}" method="POST">
         <br>

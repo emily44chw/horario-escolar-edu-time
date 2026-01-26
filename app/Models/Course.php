@@ -9,9 +9,9 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'level']; // Agrega campos según tu DB
+    protected $fillable = ['grade', 'parallel', 'school_year']; // Campos fillable
 
-    // Relaciones
+    // Relaciones (ya existentes)
     public function subjects()
     {
         return $this->belongsToMany(Subject::class);
@@ -20,5 +20,11 @@ class Course extends Model
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
+    }
+
+    // Accessor para 'name' (combina grade, parallel y school_year)
+    public function getNameAttribute()
+    {
+        return $this->grade . ' ' . $this->parallel . ' (' . $this->school_year . ')';
     }
 }

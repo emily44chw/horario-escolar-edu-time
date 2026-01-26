@@ -30,10 +30,9 @@ class ScheduleController extends Controller
     public function getSubjectsForCourse(Request $request)
     {
         $courseId = $request->course_id;
-        // Asume una relación many-to-many: subjects()->wherePivot('course_id', $courseId)
         $subjects = Subject::whereHas('courses', function ($query) use ($courseId) {
             $query->where('course_id', $courseId);
-        })->get();
+        })->with('teachers')->get(); // Agrega ->with('teachers') para cargar profesores
 
         return response()->json($subjects);
     }
@@ -60,7 +59,8 @@ class ScheduleController extends Controller
         }
 
         // Filtrar slots ocupados por profesores asignados a esta materia
-        $teacherIds = DB::table('subject_teacher')->where('subject_id', $subjectId)->pluck('teacher_id');
+        // Cambiado de 'subject_teacher' a 'teacher_subjects' para coincidir con tu DB
+        $teacherIds = DB::table('teacher_subjects')->where('subject_id', $subjectId)->pluck('teacher_id');
         $occupiedSlots = Schedule::whereIn('teacher_id', $teacherIds)
             ->where('day', $day)
             ->where('course_id', '!=', $courseId) // No solapar en el mismo curso, pero sí en otros
