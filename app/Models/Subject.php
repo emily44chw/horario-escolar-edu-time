@@ -28,7 +28,7 @@ class Subject extends Model
     // Many-to-many con usuarios (profesores que dictan esta asignatura)
     public function teachers()
     {
-        return $this->belongsToMany(User::class, 'subject_teacher');
+        return $this->belongsToMany(User::class, 'teacher_subjects', 'subject_id', 'teacher_id');
     }
 
     // Relación con horarios (una asignatura puede tener varios horarios)

@@ -58,16 +58,20 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-//Ruta - horario
-Route::resource('schedules', ScheduleController::class)->middleware(['auth', 'role:admin']);
-Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse']);
-Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots']);
-Route::post('schedules/store', [ScheduleController::class, 'store']);
-Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule']);
+Route::middleware(['auth'])->group(function () {
+    // ... rutas existentes ...
 
-//rutas para navegacion de horarios (admin)
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('horarios', [HorariosController::class, 'index'])->name('admin.horarios.index');
-    Route::get('horarios/crear', [HorariosController::class, 'create'])->name('admin.horarios.create');
-    Route::get('horarios/creaciones', [HorariosController::class, 'list'])->name('admin.horarios.list');
+    // Rutas de schedules
+    Route::resource('schedules', ScheduleController::class)->middleware(['role:admin']);
+    Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse'])->middleware(['role:admin']);
+    Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots'])->middleware(['role:admin']);
+    Route::post('schedules/store', [ScheduleController::class, 'store'])->middleware(['role:admin']);
+    Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule'])->middleware(['role:admin']);
+
+    // Rutas de admin/horarios
+    Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+        Route::get('horarios', [HorariosController::class, 'index'])->name('admin.horarios.index');
+        Route::get('horarios/crear', [HorariosController::class, 'create'])->name('admin.horarios.create');
+        Route::get('horarios/creaciones', [HorariosController::class, 'list'])->name('admin.horarios.list');
+    });
 });
