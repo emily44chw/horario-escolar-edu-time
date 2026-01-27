@@ -96,10 +96,24 @@
                     $.get('/schedules/subjects/' + courseId, function (data) {
                         $('#subject-select').html('<option value="">-- Selecciona una asignatura --</option>');
                         $.each(data, function (key, subject) {
-                            var teacherName = subject.teachers && subject.teachers.length > 0 ? subject.teachers[0].name : 'Sin asignar';
-                            var teacherId = subject.teachers && subject.teachers.length > 0 ? subject.teachers[0].id : null;
-                            $('#subject-select').append('<option value="' + subject.id + '" data-teacher="' + teacherName + '" data-teacher-id="' + teacherId + '">' + subject.name + '</option>');
+                            console.log('SUBJECT:', subject);
+
+                            let teacherName = 'Sin asignar';
+                            let teacherId = null;
+
+                            if (subject.teachers && subject.teachers.length > 0) {
+                                let t = subject.teachers[0];
+                                teacherName = t.first_name + ' ' + t.last_name;
+                                teacherId = t.id;
+                            }
+
+                            $('#subject-select').append(
+                                '<option value="' + subject.id + '" data-teacher="' + teacherName + '" data-teacher-id="' + teacherId + '">' +
+                                subject.name +
+                                '</option>'
+                            );
                         });
+
                         $('#schedule-form').show();
                     }).fail(function (xhr, status, error) {
                         console.log('Error cargando asignaturas:', status, error);
@@ -120,7 +134,9 @@
 
                         $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
                         $.each(data, function (key, slot) {
-                            $('#slot-select').append('<option value="' + slot.start + '">' + slot.start + ' - ' + slot.end + '</option>');
+                            $('#slot-select').append(
+                                '<option value="' + slot.start + ' - ' + slot.end + '">' + slot.start + ' - ' + slot.end + '</option>'
+                            );
                         });
 
                         var teacher = $('#subject-select option:selected').data('teacher');

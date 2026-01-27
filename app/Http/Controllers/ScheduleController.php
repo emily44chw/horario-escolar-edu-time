@@ -26,7 +26,7 @@ class ScheduleController extends Controller
     {
         $subjects = Subject::whereHas('courses', function ($query) use ($courseId) {
             $query->where('course_id', $courseId);
-        })->with('teachers')->get();
+        })->with('teachers.user')->get();
 
         return response()->json($subjects);
     }
@@ -39,12 +39,26 @@ class ScheduleController extends Controller
 
         \Log::info('getAvailableSlots called', compact('courseId', 'subjectId', 'day'));
 
+        // Verifica si el usuario está autenticado
+        if (!auth()->check()) {
+            \Log::warning('Usuario no autenticado');
+            return response()->json(['error' => 'No autenticado'], 401);
+        }
+
+        // Verifica el rol del usuario
+        if (auth()->user()->role !== 'admin') {
+            \Log::warning('Usuario sin rol admin', ['role' => auth()->user()->role]);
+            return response()->json(['error' => 'Acceso denegado, rol requerido: admin'], 403);
+        }
+
+        // Verifica si el curso existe
         $course = Course::find($courseId);
         if (!$course) {
             \Log::error('Curso no encontrado', compact('courseId'));
             return response()->json(['error' => 'Curso no encontrado'], 404);
         }
 
+        // Genera slots según el curso
         $isBachillerato = str_contains(strtolower($course->grade), 'bachillerato');
         $startHour = 7;
         $endHour = $isBachillerato ? 13 : 12;
@@ -60,6 +74,8 @@ class ScheduleController extends Controller
         return response()->json(array_values($slots));
     }
 
+
+
     public function store(Request $request)
     {
         $courseId = $request->course_id;
@@ -71,10 +87,20 @@ class ScheduleController extends Controller
         }
 
         foreach ($assignments as $assignment) {
+
+            // Buscar el TEACHER real usando el user_id que viene del frontend
+            $teacher = \App\Models\Teacher::where('user_id', $assignment['teacher_id'])->first();
+
+            if (!$teacher) {
+                return response()->json([
+                    'error' => 'No se encontró el profesor asociado al usuario ID ' . $assignment['teacher_id']
+                ], 400);
+            }
+
             Schedule::create([
                 'course_id' => $courseId,
                 'subject_id' => $assignment['subject_id'],
-                'teacher_id' => $assignment['teacher_id'],
+                'teacher_id' => $teacher->id, // ✅ ID REAL DE LA TABLA TEACHERS
                 'day' => $assignment['day'],
                 'start_time' => $assignment['start_time'],
                 'end_time' => date('H:i', strtotime($assignment['start_time']) + 3600),
@@ -82,21 +108,21 @@ class ScheduleController extends Controller
         }
 
         $course = Course::find($courseId);
-        $isBachillerato = str_contains($course->grade, 'bachillerato');
+        $isBachillerato = str_contains(strtolower($course->grade), 'bachillerato');
         $totalSlots = $isBachillerato ? 35 : 30;
         $assignedSlots = Schedule::where('course_id', $courseId)->count();
         $status = ($assignedSlots < $totalSlots) ? 'pending' : 'completed';
 
         Schedule::where('course_id', $courseId)->update(['status' => $status]);
 
-        return response()->json(['success' => 'Horario guardado. Status: ' . $status]);
+        return response()->json(['success' => 'Horario guardado correctamente. Estado: ' . $status]);
     }
 
     public function getSelectedSchedule(Request $request)
     {
         $courseId = $request->course_id;
         $schedules = Schedule::where('course_id', $courseId)
-            ->with(['subject', 'teacher'])
+            ->with(['subject', 'teacher.user'])
             ->get()
             ->groupBy('day');
 

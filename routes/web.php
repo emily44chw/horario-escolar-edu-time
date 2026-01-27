@@ -57,16 +57,15 @@ Route::middleware(['auth'])->group(function () {
     ]);
 });
 
-
-
-// ... rutas existentes ...
-
 // Rutas de schedules
-Route::resource('schedules', ScheduleController::class)->middleware(['role:admin']);
+// Las rutas especificas SIEMPRE van antes del Route::resource
 Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse'])->middleware(['role:admin']);
 Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots'])->middleware(['role:admin']);
 Route::post('schedules/store', [ScheduleController::class, 'store'])->middleware(['role:admin']);
 Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule'])->middleware(['role:admin']);
+
+// Resource al final
+Route::resource('schedules', ScheduleController::class)->middleware(['role:admin']);
 
 // Rutas de admin/horarios
 Route::prefix('admin')->middleware(['role:admin'])->group(function () {

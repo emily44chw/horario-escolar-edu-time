@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Teacher;
 
 class Schedule extends Model
 {
@@ -15,7 +16,7 @@ class Schedule extends Model
     protected $fillable = [
         'course_id',     // ID del curso
         'subject_id',    // ID de la asignatura
-        'teacher_id',    // ID del profesor (usuario)
+        'teacher_id',    // ID del profesor (teachers)
         'day',           // Día de la semana (ej. "Lunes")
         'start_time',    // Hora de inicio (ej. "07:00")
         'end_time',      // Hora de fin (ej. "08:00")
@@ -40,6 +41,6 @@ class Schedule extends Model
     // BelongsTo con usuario (profesor)
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 }
