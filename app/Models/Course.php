@@ -14,8 +14,14 @@ class Course extends Model
     // Relaciones (ajustadas para especificar tabla pivot y claves)
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class, 'course_subjects', 'course_id', 'subject_id');
+        return $this->belongsToMany(
+            Subject::class,
+            'course_subject',
+            'course_id',
+            'subject_id'
+        );
     }
+
 
     public function schedules()
     {

@@ -16,13 +16,20 @@ class Subject extends Model
     // Relaciones
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_subjects', 'subject_id', 'course_id');
+        return $this->belongsToMany(
+            Course::class,
+            'course_subject',
+            'subject_id',
+            'course_id'
+        );
     }
 
     public function teachers()
     {
-        return $this->belongsToMany(User::class, 'teachers_subjects', 'subject_id', 'teacher_id');
+        return $this->belongsToMany(Teacher::class, 'teacher_subjects', 'subject_id', 'teacher_id');
     }
+
+
 
     public function schedules()
     {
