@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,8 +13,9 @@ class DocenteController extends Controller
 {
     public function index()
     {
-        $docentes = Teacher::with('user')->get(); // Cargar relación con User
-        return view('admin.docentes.index', compact('docentes'));
+        $docentes = User::where('role', 'teacher')->with('subjects')->get();
+        $subjects = Subject::all();
+        return view('admin.docentes.index', compact('docentes', 'subjects'));
     }
 
     public function create()
@@ -107,5 +109,24 @@ class DocenteController extends Controller
     {
         $docente->user->delete();
         return redirect()->route('admin.docentes.index')->with('success', 'Docente eliminado.');
+    }
+
+
+
+    // Asignar materia a profesor
+    public function assignSubject(Request $request, $id)
+    {
+        $request->validate(['subject_id' => 'required|exists:subjects,id']);
+        $teacher = User::findOrFail($id);
+        $teacher->subjects()->syncWithoutDetaching([$request->subject_id]);
+        return redirect()->back()->with('success', 'Materia asignada.');
+    }
+
+    // Remover materia de profesor
+    public function removeSubject($teacherId, $subjectId)
+    {
+        $teacher = User::findOrFail($teacherId);
+        $teacher->subjects()->detach($subjectId);
+        return redirect()->back()->with('success', 'Materia removida.');
     }
 }

@@ -9,8 +9,6 @@ class Teacher extends Model
 {
     use HasFactory;
 
-    //Campos que estan en la base de datos para asignacion masiva de la tabla Teachers
-    //fillable permite asignacion masiva
     protected $fillable = [
         'user_id',
         'first_name',
@@ -19,24 +17,25 @@ class Teacher extends Model
         'status',
     ];
 
-    //Relaciones con otras tablas del sistema
-
-    //Relacion uno a uno con User
+    // Relaciones
     public function user()
     {
         return $this->belongsTo(User::class);
-
     }
 
-    //Relacion muchos a muchos con Subject
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class, 'teacher_subjects');
+        return $this->belongsToMany(Subject::class, 'teachers_subjects', 'teacher_id', 'subject_id');
     }
 
-    //Relacion uno a muchos con Schedule
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
+    }
+
+    // Accessor opcional para nombre completo
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

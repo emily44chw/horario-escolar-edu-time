@@ -34,6 +34,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/docente/home', [DocenteController::class, 'index'])->name('docente.home');
     Route::get('/estudiante/home', [EstudianteController::class, 'index'])->name('estudiante.home');
 
+    // Para estudiantes
+    Route::post('admin/estudiantes/{id}/assign-course', [AdminEstudiante::class, 'assignCourse'])->name('admin.estudiantes.assignCourse');
+    Route::delete('admin/estudiantes/{studentId}/remove-course/{courseId}', [AdminEstudiante::class, 'removeCourse'])->name('admin.estudiantes.removeCourse');
+
+    // Para docentes
+    Route::post('admin/docentes/{id}/assign-subject', [AdminDocente::class, 'assignSubject'])->name('admin.docentes.assignSubject');
+    Route::delete('admin/docentes/{teacherId}/remove-subject/{subjectId}', [AdminDocente::class, 'removeSubject'])->name('admin.docentes.removeSubject');
+
     // CRUD Docentes
     Route::resource('admin/docentes', AdminDocente::class)->names([
         'index' => 'admin.docentes.index',

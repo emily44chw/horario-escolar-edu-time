@@ -3,6 +3,7 @@
 @section('content')
     <h1>Gestionar estudiantes</h1>
     <a href="{{ route('admin.estudiantes.create') }}" class="btn btn-primary">Crear Nuevo Estudiante + </a>
+    <br><br>
     <table class="table">
         <thead>
             <br>
@@ -12,6 +13,8 @@
                 <th>Email</th>
                 <th>Teléfono</th>
                 <th>Tel. Representante</th>
+                <th>Curso</th>
+                <th>Asignar Curso</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>

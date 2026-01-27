@@ -114,4 +114,22 @@ class EstudianteController extends Controller
         return redirect()->route('admin.estudiantes.index')->with('success', 'Estudiante eliminado.');
     }
 
+
+    // Asignar curso a estudiante
+    public function assignCourse(Request $request, $id)
+    {
+        $request->validate(['course_id' => 'required|exists:courses,id']);
+        $student = User::findOrFail($id);
+        $student->courses()->syncWithoutDetaching([$request->course_id]);  // Asigna sin duplicados
+        return redirect()->back()->with('success', 'Curso asignado.');
+    }
+
+    // Remover curso de estudiante
+    public function removeCourse($studentId, $courseId)
+    {
+        $student = User::findOrFail($studentId);
+        $student->courses()->detach($courseId);
+        return redirect()->back()->with('success', 'Curso removido.');
+    }
+
 }

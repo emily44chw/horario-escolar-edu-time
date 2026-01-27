@@ -9,28 +9,21 @@ class Subject extends Model
 {
     use HasFactory;
 
-    /**
-     * Campos que se pueden asignar masivamente.
-     */
     protected $fillable = [
-        'name', // Nombre de la asignatura (ej. "Matemáticas")
+        'name',
     ];
 
-    /**
-     * Relaciones
-     */
-    // Many-to-many con cursos (una asignatura puede estar en varios cursos)
+    // Relaciones
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_subject');
+        return $this->belongsToMany(Course::class, 'course_subjects', 'subject_id', 'course_id');
     }
 
-    // Many-to-many con usuarios (profesores que dictan esta asignatura
     public function teachers()
     {
-        return $this->belongsToMany(Teacher::class, 'teacher_subjects', 'subject_id', 'teacher_id');
+        return $this->belongsToMany(User::class, 'teachers_subjects', 'subject_id', 'teacher_id');
     }
-    // Relación con horarios (una asignatura puede tener varios horarios)
+
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
