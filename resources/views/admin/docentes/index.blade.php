@@ -8,7 +8,7 @@
             <br>
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
+                <th>Nombres y Apellidos</th>
                 <th>Email</th>
                 <th>Teléfono</th>
                 <th>Estado</th>
