@@ -1,16 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
 @section('content')
     <h1>Bienvenido {{ Auth::user()->name }}</h1>
-    <li><a href="{{ route('admin.docentes.index') }}">Gestionar Docentes</a></li>
-    <br>
-    <li><a href="{{ route('admin.estudiantes.index') }}">Gestionar Estudiantes</a></li>
-    <br>
-    <li><a href="{{ route('admin.horarios.index') }}">Horarios</a></li>
-    <br>
 
-    <form action="{{ route('logout') }}" method="POST">
-        <br>
-        @csrf
-        <button type="submit">Cerrar Sesión</button>
-    </form>
+    <div class="cards">
+
+        <a href="{{ route('admin.docentes.index') }}" class="card">
+            Gestionar Docentes
+        </a>
+
+        <a href="{{ route('admin.estudiantes.index') }}" class="card">
+            Gestionar Estudiantes
+        </a>
+
+        <a href="{{ route('admin.horarios.index') }}" class="card">
+            Horarios
+        </a>
+
+    </div>
 @endsection
