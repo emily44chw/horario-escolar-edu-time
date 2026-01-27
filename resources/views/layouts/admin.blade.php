@@ -29,7 +29,6 @@
             </form>
         </aside>
 
-        <!-- CONTENIDO -->
         <main class="content">
             @yield('content')
         </main>

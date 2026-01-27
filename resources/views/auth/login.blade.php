@@ -3,9 +3,6 @@
 <head>
     <title>Iniciar sesión</title>
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZmCcaYpPeyyzetH2LBTUeV3oNsYBW5v3ynxwA5dgvm/e9Bf6k1gKXK2HF8A0B5lJdKg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
