@@ -14,14 +14,14 @@ class ScheduleController extends Controller
     // Constructor para proteger con middleware (solo admin)
     public function __construct()
     {
-        $this->middleware(['auth', 'role:admin']); // Se asume que poseo un middleware 'role' para admin
+        $this->middleware(['auth', 'role:admin']); // Asume que tienes un middleware 'role' para admin
     }
 
-    // Metodo para mostrar la vista de creacion de horarios
+    // Método para mostrar la vista de creación de horarios
     public function create()
     {
-        // Obtener cursos disponibles para mostrar en lista desplegable
-        $courses = Course::all(); // Course::all() trae los cursos registrados
+        // Obtener cursos disponibles para la lista desplegable
+        $courses = Course::all(); // Asume que Course::all() trae los cursos registrados
 
         return view('admin.schedules.create', compact('courses'));
     }
@@ -30,9 +30,10 @@ class ScheduleController extends Controller
     public function getSubjectsForCourse(Request $request)
     {
         $courseId = $request->course_id;
+        // Asume una relación many-to-many: subjects()->wherePivot('course_id', $courseId)
         $subjects = Subject::whereHas('courses', function ($query) use ($courseId) {
             $query->where('course_id', $courseId);
-        })->with('teachers')->get(); // Agrega ->with('teachers') para cargar profesores
+        })->get();
 
         return response()->json($subjects);
     }
@@ -59,8 +60,7 @@ class ScheduleController extends Controller
         }
 
         // Filtrar slots ocupados por profesores asignados a esta materia
-        // Cambiado de 'subject_teacher' a 'teacher_subjects' para coincidir con tu DB
-        $teacherIds = DB::table('teacher_subjects')->where('subject_id', $subjectId)->pluck('teacher_id');
+        $teacherIds = DB::table('subject_teacher')->where('subject_id', $subjectId)->pluck('teacher_id');
         $occupiedSlots = Schedule::whereIn('teacher_id', $teacherIds)
             ->where('day', $day)
             ->where('course_id', '!=', $courseId) // No solapar en el mismo curso, pero sí en otros
