@@ -31,4 +31,14 @@ class User extends Authenticatable
         return $this->hasOne(Students::class);
     }
 
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'students_courses', 'student_id', 'course_id');
+    }
+
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'teachers_subjects', 'teacher_id', 'subject_id');
+    }
+
 }

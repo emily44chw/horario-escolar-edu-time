@@ -9,7 +9,6 @@ class Students extends Model
 {
     use HasFactory;
 
-    //Campos que estan en la base de datos para asignacion masiva de la tabla Students
     protected $fillable = [
         'user_id',
         'first_name',
@@ -21,23 +20,25 @@ class Students extends Model
         'status',
     ];
 
-    //Relaciones con otras tablas del sistema
-    //Relacion uno a uno con User
+    // Relaciones
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    //Relacion muchos a uno con Course
     public function course()
     {
         return $this->belongsTo(Course::class);
     }
 
-    //Relacion muchos a uno con classroom
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);
     }
 
+    // Accessor opcional para nombre completo
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }
