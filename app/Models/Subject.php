@@ -22,7 +22,7 @@ class Subject extends Model
     // Many-to-many con cursos (una asignatura puede estar en varios cursos)
     public function courses()
     {
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class, 'course_subject');
     }
 
     // Many-to-many con usuarios (profesores que dictan esta asignatura)

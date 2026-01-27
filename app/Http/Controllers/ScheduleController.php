@@ -22,9 +22,8 @@ class ScheduleController extends Controller
         return view('admin.schedules.create', compact('courses'));
     }
 
-    public function getSubjectsForCourse(Request $request)
+    public function getSubjectsForCourse($courseId)
     {
-        $courseId = $request->course_id;
         $subjects = Subject::whereHas('courses', function ($query) use ($courseId) {
             $query->where('course_id', $courseId);
         })->with('teachers')->get();
@@ -46,7 +45,7 @@ class ScheduleController extends Controller
             return response()->json(['error' => 'Curso no encontrado'], 404);
         }
 
-        $isBachillerato = str_contains($course->name, 'bachillerato');
+        $isBachillerato = str_contains(strtolower($course->grade), 'bachillerato');
         $startHour = 7;
         $endHour = $isBachillerato ? 13 : 12;
 
@@ -83,7 +82,7 @@ class ScheduleController extends Controller
         }
 
         $course = Course::find($courseId);
-        $isBachillerato = str_contains($course->name, 'bachillerato');
+        $isBachillerato = str_contains($course->grade, 'bachillerato');
         $totalSlots = $isBachillerato ? 35 : 30;
         $assignedSlots = Schedule::where('course_id', $courseId)->count();
         $status = ($assignedSlots < $totalSlots) ? 'pending' : 'completed';

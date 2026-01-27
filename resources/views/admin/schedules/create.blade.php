@@ -117,17 +117,20 @@
                 if (courseId && subjectId && day) {
                     $.get('/schedules/slots?course_id=' + courseId + '&subject_id=' + subjectId + '&day=' + day, function (data) {
                         console.log('Respuesta de slots:', data);
+
                         $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
                         $.each(data, function (key, slot) {
                             $('#slot-select').append('<option value="' + slot.start + '">' + slot.start + ' - ' + slot.end + '</option>');
                         });
-                        // Mostrar profesor
+
                         var teacher = $('#subject-select option:selected').data('teacher');
                         $('#teacher-display').val(teacher || 'Sin asignar');
                     }).fail(function (xhr, status, error) {
                         console.log('Error en AJAX slots:', status, error);
                         alert('Error interno al cargar slots. Revisa los logs.');
                     });
+
+
                 } else {
                     console.log('Faltan parámetros');
                 }

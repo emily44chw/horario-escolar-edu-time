@@ -58,20 +58,19 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
-    // ... rutas existentes ...
 
-    // Rutas de schedules
-    Route::resource('schedules', ScheduleController::class)->middleware(['role:admin']);
-    Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse'])->middleware(['role:admin']);
-    Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots'])->middleware(['role:admin']);
-    Route::post('schedules/store', [ScheduleController::class, 'store'])->middleware(['role:admin']);
-    Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule'])->middleware(['role:admin']);
+// ... rutas existentes ...
 
-    // Rutas de admin/horarios
-    Route::prefix('admin')->middleware(['role:admin'])->group(function () {
-        Route::get('horarios', [HorariosController::class, 'index'])->name('admin.horarios.index');
-        Route::get('horarios/crear', [HorariosController::class, 'create'])->name('admin.horarios.create');
-        Route::get('horarios/creaciones', [HorariosController::class, 'list'])->name('admin.horarios.list');
-    });
+// Rutas de schedules
+Route::resource('schedules', ScheduleController::class)->middleware(['role:admin']);
+Route::get('schedules/subjects/{course_id}', [ScheduleController::class, 'getSubjectsForCourse'])->middleware(['role:admin']);
+Route::get('schedules/slots', [ScheduleController::class, 'getAvailableSlots'])->middleware(['role:admin']);
+Route::post('schedules/store', [ScheduleController::class, 'store'])->middleware(['role:admin']);
+Route::get('schedules/selected/{course_id}', [ScheduleController::class, 'getSelectedSchedule'])->middleware(['role:admin']);
+
+// Rutas de admin/horarios
+Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+    Route::get('horarios', [HorariosController::class, 'index'])->name('admin.horarios.index');
+    Route::get('horarios/crear', [HorariosController::class, 'create'])->name('admin.horarios.create');
+    Route::get('horarios/creaciones', [HorariosController::class, 'list'])->name('admin.horarios.list');
 });
