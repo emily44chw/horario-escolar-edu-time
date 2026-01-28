@@ -9,11 +9,27 @@ use Illuminate\Support\Facades\Hash;
 
 class EstudianteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $estudiantes = Students::with('user')->get(); // Cargar relación con User
+        $query = Students::with('user');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($u) use ($search) {
+                        $u->where('email', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $estudiantes = $query->latest()->get();
+
         return view('admin.estudiantes.index', compact('estudiantes'));
     }
+
 
     public function create()
     {

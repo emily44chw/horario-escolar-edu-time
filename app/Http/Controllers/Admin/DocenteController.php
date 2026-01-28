@@ -121,10 +121,18 @@ class DocenteController extends Controller
 
     public function destroy(Teacher $docente)
     {
-        $docente->user->delete();
+        if ($docente->schedules()->exists()) {
+            return redirect()->back()->with('error', 'No se puede eliminar el docente porque tiene horarios asignados. Elimina los horarios primero.');
+        }
+
+        if ($docente->user) {
+            $docente->user->delete();
+        }
+
+        $docente->delete();
+
         return redirect()->route('admin.docentes.index')->with('success', 'Docente eliminado.');
     }
-
 
 
 

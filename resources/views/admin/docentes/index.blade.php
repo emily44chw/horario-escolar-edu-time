@@ -20,7 +20,6 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nombres y Apellidos</th>
                 <th>Email</th>
                 <th>Teléfono</th>
@@ -32,12 +31,11 @@
         <tbody id="docentesTable">
             @foreach($docentes as $docente)
                 <tr>
-                    <td>{{ $docente->id }}</td>
                     <td class="docente-nombre">{{ $docente->first_name }} {{ $docente->last_name }}</td>
                     <td>{{ $docente->user ? $docente->user->email : 'Sin email asignado' }}</td>
                     <td>{{ $docente->phone }}</td>
                     <td>
-                        <span class="status active">Activo</span>
+                        <span class="status active">{{ $docente->status }} </span>
                     </td>
                     <td class="actions">
                         <a href="{{ route('admin.docentes.show', $docente) }}" title="Ver">
