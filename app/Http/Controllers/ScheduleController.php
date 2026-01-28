@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
+    // Constructor para proteger con middleware (solo admin)
     public function __construct()
     {
         $this->middleware(['auth', 'role:admin']);
@@ -39,7 +40,7 @@ class ScheduleController extends Controller
 
         \Log::info('getAvailableSlots called', compact('courseId', 'subjectId', 'day'));
 
-        // Verifica si el usuario está autenticado
+        // Verifica si el usuario esta autenticado
         if (!auth()->check()) {
             \Log::warning('Usuario no autenticado');
             return response()->json(['error' => 'No autenticado'], 401);

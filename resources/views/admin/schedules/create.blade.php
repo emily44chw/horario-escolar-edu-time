@@ -38,7 +38,7 @@
                 </div>
 
 
-                <!-- Selección de día -->
+                <!-- Seleccion de día -->
                 <div class="form-group mb-3">
                     <label for="day-select">Selecciona el día:</label>
                     <select id="day-select" class="form-control" required>
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <!-- Botón para agregar asignación (guarda en la tabla) -->
+    <!-- Botón para agregar asignacion (guarda en la tabla) -->
     <div class="text-center mt-3">
         <button type="button" id="add-assignment-btn" class="btn btn-primary">
             Agregar asignación
@@ -81,7 +81,7 @@
     </div>
 
     <div class="mt-4">
-        <!-- Tabla "Horario Seleccionado" (se actualiza dinámicamente) -->
+        <!-- Tabla "Horario Seleccionado" (se actualiza dinamicamente) -->
         <h2 class="mt-5 mb-4">Horario Seleccionado</h2>
         <!-- Muestra nombre de curso selecionado - trabajo actual -->
         <p id="current-course-label" class="font-weight-bold mb-3 text-center" style="display:none;"></p>
@@ -152,7 +152,7 @@
                 });
             }
 
-            // Selección de curso
+            // Seleccion de curso
             $('#course-select').change(function () {
                 var courseId = $(this).val();
                 if (!courseId) return;
@@ -187,7 +187,7 @@
                 });
             });
 
-            // Cambiar materia o día -> cargar slots
+            // Cambiar materia o dia -> cargar slots
             $('#subject-select, #day-select').change(function () {
                 var courseId = $('#course-select').val();
                 var subjectId = $('#subject-select').val();
@@ -206,7 +206,7 @@
                 }
             });
 
-            // Agregar asignación
+            // Agregar asignacion
             $('#add-assignment-btn').click(function () {
                 var courseId = $('#course-select').val();
                 var subjectId = $('#subject-select').val();
@@ -225,14 +225,14 @@
                         subject_name: subjectName,
                         teacher_name: teacher,
                         teacher_id: teacherId,
-                        classroom_id: null // si no tienes aulas
+                        classroom_id: null // si no tengo aulas - ajustar en db pendiente
                     });
 
                     renderScheduleGrid();
                     $('#schedule-table').show();
                     $('#save-btn').show();
 
-                    // Limpiar para próxima asignación
+                    // Limpiar para proxima asignacion
                     $('#subject-select').val('');
                     $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
                     $('#teacher-display').val('');
@@ -256,7 +256,7 @@
                 });
             });
 
-            // Reset formulario
+            // Reset formulario - volver a mostrar campos
             $('#new-course-btn').click(function () {
                 if (assignments.length > 0 && !confirm('No guardaste asignaciones, ¿descartar?')) return;
 
