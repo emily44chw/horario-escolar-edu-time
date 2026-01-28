@@ -67,16 +67,25 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'admin.estudiantes.destroy',
     ]);
 
-    Route::resource('admin/cursos', AdminCurso::class)->names([
-        'index' => 'admin.cursos.index',
-        'create' => 'admin.cursos.create',
-        'store' => 'admin.cursos.store',
-        'show' => 'admin.cursos.show',
-        'edit' => 'admin.cursos.edit',
-        'update' => 'admin.cursos.update',
-        'destroy' => 'admin.cursos.destroy',
-    ]);
+    // CRUD Cursos
+    Route::resource('admin/cursos', AdminCurso::class)
+        ->parameters(['cursos' => 'course'])
+        ->names([
+            'index' => 'admin.cursos.index',
+            'create' => 'admin.cursos.create',
+            'store' => 'admin.cursos.store',
+            'show' => 'admin.cursos.show',
+            'edit' => 'admin.cursos.edit',
+            'update' => 'admin.cursos.update',
+            'destroy' => 'admin.cursos.destroy',
+        ]);
+    Route::post('admin/cursos/{id}/assign-student', [AdminCurso::class, 'assignStudent'])->name('admin.cursos.assignStudent');
+    Route::delete(
+        'admin/cursos/{course}/students/{student}',
+        [AdminCurso::class, 'removeStudent']
+    )->name('admin.cursos.students.remove');
 
+    // CRUD Materias
     Route::resource('admin/materias', AdminMateria::class)->names([
         'index' => 'admin.materias.index',
         'create' => 'admin.materias.create',

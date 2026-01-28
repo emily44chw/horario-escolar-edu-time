@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Classroom;
 
 class Students extends Model
 {
@@ -26,11 +28,10 @@ class Students extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function course()
+    public function courses()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsToMany(User::class, 'student_courses', 'student_id', 'course_id');
     }
-
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);

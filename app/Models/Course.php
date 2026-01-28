@@ -25,15 +25,15 @@ class Course extends Model
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class);  // Asume que Schedule tiene course_id
+        return $this->hasMany(Schedule::class);
     }
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'students_courses', 'course_id', 'student_id');
+        return $this->belongsToMany(User::class, 'student_courses', 'course_id', 'student_id');
     }
 
-    // Accessor para 'name' (perfecto para combinar campos)
+
     public function getNameAttribute()
     {
         return $this->grade . ' ' . $this->parallel . ' (' . $this->school_year . ')';

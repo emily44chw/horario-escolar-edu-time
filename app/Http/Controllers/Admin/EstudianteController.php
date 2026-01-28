@@ -6,12 +6,14 @@ use App\Models\Students;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Course;
 
 class EstudianteController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Students::with('user');
+        $query = Students::with(['user.courses']);
+
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -25,10 +27,22 @@ class EstudianteController extends Controller
             });
         }
 
+        if ($request->filled('course_id')) {
+            $courseId = $request->course_id;
+
+            $query->whereHas('user.courses', function ($q) use ($courseId) {
+                $q->where('courses.id', $courseId);
+            });
+        }
+
         $estudiantes = $query->latest()->get();
 
-        return view('admin.estudiantes.index', compact('estudiantes'));
+        $courses = Course::orderBy('grade')->get();
+
+        return view('admin.estudiantes.index', compact('estudiantes', 'courses'));
     }
+
+
 
 
     public function create()
@@ -131,21 +145,18 @@ class EstudianteController extends Controller
     }
 
 
-    // Asignar curso a estudiante
     public function assignCourse(Request $request, $id)
     {
         $request->validate(['course_id' => 'required|exists:courses,id']);
-        $student = User::findOrFail($id);
-        $student->courses()->syncWithoutDetaching([$request->course_id]);  // Asigna sin duplicados
+        $student = Students::findOrFail($id);  // O User si usas role
+        $student->courses()->syncWithoutDetaching([$request->course_id]);
         return redirect()->back()->with('success', 'Curso asignado.');
     }
 
-    // Remover curso de estudiante
     public function removeCourse($studentId, $courseId)
     {
-        $student = User::findOrFail($studentId);
+        $student = Students::findOrFail($studentId);
         $student->courses()->detach($courseId);
         return redirect()->back()->with('success', 'Curso removido.');
     }
-
 }
