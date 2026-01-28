@@ -78,44 +78,38 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
-        $courseId = $request->course_id;
-        $assignments = $request->assignments;
+        $data = $request->validate([
+            'course_id' => 'required|integer|exists:courses,id',
+            'assignments' => 'required|array',
+            'assignments.*.subject_id' => 'required|integer|exists:subjects,id',
+            'assignments.*.teacher_id' => 'nullable|integer|exists:teachers,id',
+            'assignments.*.day' => 'required|string',
+            'assignments.*.start_time' => 'required|string',
+            'assignments.*.end_time' => 'required|string',
+            'assignments.*.classroom_id' => 'nullable|integer|exists:classrooms,id', // opcional
+        ]);
 
-        $existingSchedules = Schedule::where('course_id', $courseId)->count();
-        if ($existingSchedules > 0) {
-            return response()->json(['error' => 'Este curso ya tiene un horario asignado. Edítalo en lugar de crear uno nuevo.']);
-        }
+        $savedSchedules = [];
 
-        foreach ($assignments as $assignment) {
-
-            // Buscar el TEACHER real usando el user_id que viene del frontend
-            $teacher = \App\Models\Teacher::where('user_id', $assignment['teacher_id'])->first();
-
-            if (!$teacher) {
-                return response()->json([
-                    'error' => 'No se encontró el profesor asociado al usuario ID ' . $assignment['teacher_id']
-                ], 400);
-            }
-
-            Schedule::create([
-                'course_id' => $courseId,
-                'subject_id' => $assignment['subject_id'],
-                'teacher_id' => $teacher->id, // ✅ ID REAL DE LA TABLA TEACHERS
-                'day' => $assignment['day'],
-                'start_time' => $assignment['start_time'],
-                'end_time' => date('H:i', strtotime($assignment['start_time']) + 3600),
+        foreach ($data['assignments'] as $a) {
+            $schedule = Schedule::create([
+                'course_id' => $data['course_id'],
+                'subject_id' => $a['subject_id'],
+                'teacher_id' => $a['teacher_id'] ?? null,
+                'classroom_id' => $a['classroom_id'] ?? null,
+                'day' => $a['day'],
+                'start_time' => $a['start_time'],
+                'end_time' => $a['end_time'],
+                'status' => 'pending',
             ]);
+
+            $savedSchedules[] = $schedule;
         }
 
-        $course = Course::find($courseId);
-        $isBachillerato = str_contains(strtolower($course->grade), 'bachillerato');
-        $totalSlots = $isBachillerato ? 35 : 30;
-        $assignedSlots = Schedule::where('course_id', $courseId)->count();
-        $status = ($assignedSlots < $totalSlots) ? 'pending' : 'completed';
-
-        Schedule::where('course_id', $courseId)->update(['status' => $status]);
-
-        return response()->json(['success' => 'Horario guardado correctamente. Estado: ' . $status]);
+        return response()->json([
+            'success' => 'Se guardaron ' . count($savedSchedules) . ' asignaciones.',
+            'data' => $savedSchedules
+        ]);
     }
 
     public function getSelectedSchedule(Request $request)

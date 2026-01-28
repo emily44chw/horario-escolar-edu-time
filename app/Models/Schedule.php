@@ -21,7 +21,10 @@ class Schedule extends Model
         'start_time',    // Hora de inicio (ej. "07:00")
         'end_time',      // Hora de fin (ej. "08:00")
         'status',        // Estado (ej. "completed" o "pending")
+
     ];
+
+    public $timestamps = false;
 
     /**
      * Relaciones

@@ -118,29 +118,21 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            var assignments = []; // asignaciones actuales
-            var lockedCourseId = null; // curso actualmente en edicion
+            var assignments = [];
             const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
             function generateEmptyGrid() {
                 let tbody = $('#schedule-body');
                 tbody.html('');
 
-                let startHour = 7;
-                let endHour = 13; // luego lo hacemos dinámico
-
-                for (let hour = startHour; hour < endHour; hour++) {
+                for (let hour = 7; hour < 13; hour++) {
                     let start = String(hour).padStart(2, '0') + ':00';
                     let end = String(hour + 1).padStart(2, '0') + ':00';
 
-                    let row = `<tr data-start="${start}">`;
-                    row += `<td>${start}</td>`;
-                    row += `<td>${end}</td>`;
-
+                    let row = `<tr data-start="${start}"><td>${start}</td><td>${end}</td>`;
                     for (let d of DAYS) {
                         row += `<td data-day="${d}" class="schedule-cell"></td>`;
                     }
-
                     row += `</tr>`;
                     tbody.append(row);
                 }
@@ -149,51 +141,36 @@
             generateEmptyGrid();
 
             function renderScheduleGrid() {
-                generateEmptyGrid(); // primero limpia y recrea la grilla
+                generateEmptyGrid();
 
                 assignments.forEach(a => {
                     let row = $(`tr[data-start="${a.start_time}"]`);
                     let cell = row.find(`td[data-day="${a.day}"]`);
-
                     if (cell.length) {
-                        cell.html(`
-                                                <div><strong>${a.subject_name}</strong></div>
-                                                                                                        <div style="font-size:12px">${a.teacher_name}</div>
-                                                                                                    `);
+                        cell.html(`<div><strong>${a.subject_name}</strong></div><div style="font-size:12px">${a.teacher_name}</div>`);
                     }
                 });
             }
 
-
-            // Al seleccionar curso, verificar si ya tiene horario y cargar asignaturas
+            // Selección de curso
             $('#course-select').change(function () {
                 var courseId = $(this).val();
-                var courseName = $('#course-select option:selected').text();
-
                 if (!courseId) return;
 
-                // Bloqueamos el selector de curso
                 $('#course-select').prop('disabled', true);
                 $('#new-course-btn').show();
+                $('#current-course-label').text('Curso: ' + $('#course-select option:selected').text()).show();
 
-                lockedCourseId = courseId;
-
-                // Mostramos el nombre del curso en la sección de horario
-                $('#current-course-label')
-                    .text('Curso: ' + courseName)
-                    .show();
-
-                // Limpiamos cualquier basura anterior
                 assignments = [];
                 $('#schedule-table tbody').html('');
                 $('#schedule-table').hide();
                 $('#save-btn').hide();
 
-                // Cargamos materias
                 $.get('/schedules/subjects/' + courseId, function (data) {
+                    console.log('Materias recibidas:', data);
                     $('#subject-select').html('<option value="">-- Selecciona una asignatura --</option>');
 
-                    $.each(data, function (key, subject) {
+                    $.each(data, function (i, subject) {
                         let teacherName = 'Sin asignar';
                         let teacherId = null;
 
@@ -203,47 +180,33 @@
                             teacherId = t.id;
                         }
 
-                        $('#subject-select').append(
-                            `<option value="${subject.id}" data-teacher="${teacherName}" data-teacher-id="${teacherId}">
-                                                                                                                                                                                                                            ${subject.name}
-                                                                                                                                                                                                                        </option>`
-                        );
+                        $('#subject-select').append(`<option value="${subject.id}" data-teacher="${teacherName}" data-teacher-id="${teacherId}">${subject.name}</option>`);
                     });
 
                     $('#schedule-form').show();
                 });
             });
 
-            // Al cambiar asignatura o día, cargar slots disponibles
+            // Cambiar materia o día -> cargar slots
             $('#subject-select, #day-select').change(function () {
                 var courseId = $('#course-select').val();
                 var subjectId = $('#subject-select').val();
                 var day = $('#day-select').val();
-                console.log('Parámetros enviados:', { courseId, subjectId, day });
-                if (courseId && subjectId && day) {
-                    $.get('/schedules/slots?course_id=' + courseId + '&subject_id=' + subjectId + '&day=' + day, function (data) {
-                        console.log('Respuesta de slots:', data);
 
+                if (courseId && subjectId && day) {
+                    $.get(`/schedules/slots?course_id=${courseId}&subject_id=${subjectId}&day=${day}`, function (data) {
                         $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
-                        $.each(data, function (key, slot) {
-                            $('#slot-select').append(
-                                '<option value="' + slot.start + ' - ' + slot.end + '">' + slot.start + ' - ' + slot.end + '</option>'
-                            );
+                        $.each(data, function (i, slot) {
+                            $('#slot-select').append(`<option value="${slot.start} - ${slot.end}">${slot.start} - ${slot.end}</option>`);
                         });
 
                         var teacher = $('#subject-select option:selected').data('teacher');
                         $('#teacher-display').val(teacher || 'Sin asignar');
-                    }).fail(function (xhr, status, error) {
-                        console.log('Error en AJAX slots:', status, error);
-                        alert('Error interno al cargar slots. Revisa los logs.');
                     });
-
-                } else {
-                    console.log('Faltan parámetros');
                 }
             });
 
-            // Agregar asignación a la tabla y array
+            // Agregar asignación
             $('#add-assignment-btn').click(function () {
                 var courseId = $('#course-select').val();
                 var subjectId = $('#subject-select').val();
@@ -254,79 +217,58 @@
                 var teacherId = $('#subject-select option:selected').data('teacher-id');
 
                 if (courseId && subjectId && day && slot) {
-                    // Agregar a array (para guardar)
                     assignments.push({
                         subject_id: subjectId,
                         day: day,
-                        start_time: slot.split(' - ')[0], // Ej. "07:00"
+                        start_time: slot.split(' - ')[0],
                         end_time: slot.split(' - ')[1],
                         subject_name: subjectName,
-                        teacher_name: teacher
+                        teacher_name: teacher,
+                        teacher_id: teacherId,
+                        classroom_id: null // si no tienes aulas
                     });
 
-                    // Renderiza la grilla correctamente
                     renderScheduleGrid();
-
-                    // Muestra tabla y botón de guardar
                     $('#schedule-table').show();
                     $('#save-btn').show();
-                }
 
-                // Limpiar formulario para nueva asignación
-                $('#subject-select').val('');
-                $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
-                $('#teacher-display').val('');
+                    // Limpiar para próxima asignación
+                    $('#subject-select').val('');
+                    $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
+                    $('#teacher-display').val('');
+                }
             });
 
-            // Guardar horario (envía assignments y verifica huecos)
+            // Guardar horario en DB
             $('#save-btn').click(function () {
-                var courseId = $('#course-select').val();
                 $.post('/schedules/store', {
-                    course_id: courseId,
+                    course_id: $('#course-select').val(),
                     assignments: assignments,
-                    _token: '{{ csrf_token() }}' // Token CSRF para Laravel
+                    _token: '{{ csrf_token() }}'
                 }, function (data) {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        $('#status-message').text('Horario guardado. Status: ' + data.success.split(': ')[1]).show();
-                        // Recargar tabla si es necesario
-                        $.get('/schedules/selected/' + courseId, function (data) {
-                            // Actualizar tabla con datos del servidor si quieres
-                        });
-                    }
-                }).fail(function (xhr, status, error) {
-                    console.log('Error guardando:', status, error);
+                    alert(data.success);
+                    assignments = [];
+                    renderScheduleGrid();
+                    $('#save-btn').hide();
+                }).fail(function (xhr) {
+                    console.log('Error guardando:', xhr.responseText);
                     alert('Error interno al guardar. Revisa los logs.');
                 });
             });
 
+            // Reset formulario
             $('#new-course-btn').click(function () {
+                if (assignments.length > 0 && !confirm('No guardaste asignaciones, ¿descartar?')) return;
 
-                if (assignments.length > 0) {
-                    var confirmDiscard = confirm('Usted no ha guardado la creación anterior, ¿desea descartar las asignaciones?');
-
-                    if (!confirmDiscard) {
-                        return; // NO hace nada
-                    }
-                }
-
-                // Reset total
                 assignments = [];
                 renderScheduleGrid();
-                lockedCourseId = null;
-
                 $('#course-select').prop('disabled', false).val('');
                 $('#new-course-btn').hide();
-
                 $('#schedule-form').hide();
                 $('#current-course-label').hide();
-
                 $('#schedule-table tbody').html('');
                 $('#schedule-table').hide();
                 $('#save-btn').hide();
-
-                // Limpia formulario
                 $('#subject-select').val('');
                 $('#day-select').val('Lunes');
                 $('#slot-select').html('<option value="">-- Selecciona un horario --</option>');
@@ -334,4 +276,5 @@
             });
         });
     </script>
+
 @endsection
