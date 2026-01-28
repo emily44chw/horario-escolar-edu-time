@@ -1,11 +1,24 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-    <h1>Gestionar docentes</h1>
-    <a href="{{ route('admin.docentes.create') }}" class="btn btn-primary">Crear Nuevo Docente + </a>
-    <table class="table">
+
+    <div class="page-header">
+        <h1>Gestión Docentes</h1>
+
+        <div class="page-actions">
+            <form method="GET" action="{{ route('admin.docentes.index') }}">
+                <input type="text" id="searchDocente" placeholder="Buscar por el nombre del docente" class="search-input">
+            </form>
+
+            <a href="{{ route('admin.docentes.create') }}" class="btn-primary">
+                Crear nuevo docente +
+            </a>
+        </div>
+
+    </div>
+
+    <table class="data-table">
         <thead>
-            <br>
             <tr>
                 <th>ID</th>
                 <th>Nombres y Apellidos</th>
@@ -15,27 +28,48 @@
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody>
+
+        <tbody id="docentesTable">
             @foreach($docentes as $docente)
                 <tr>
                     <td>{{ $docente->id }}</td>
-                    <td>{{ $docente->first_name }} {{ $docente->last_name }}</td>
-                    <td>{{ $docente->user->email }}</td>
+                    <td class="docente-nombre">{{ $docente->first_name }} {{ $docente->last_name }}</td>
+                    <td>{{ $docente->user ? $docente->user->email : 'Sin email asignado' }}</td>
                     <td>{{ $docente->phone }}</td>
-                    <td>{{ $docente->status }}</td>
                     <td>
-                        <a href="{{ route('admin.docentes.show', $docente) }}">Ver</a>
-                        <a href="{{ route('admin.docentes.edit', $docente) }}">Editar</a>
-                        <form action="{{ route('admin.docentes.destroy', $docente) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('¿Estás seguro de eliminar este docente?')">Eliminar</button>
+                        <span class="status active">Activo</span>
+                    </td>
+                    <td class="actions">
+                        <a href="{{ route('admin.docentes.show', $docente) }}" title="Ver">
+                            <i class="fa-solid fa-user"></i>
+                        </a>
+
+                        <a href="{{ route('admin.docentes.edit', $docente) }}" title="Editar">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <form action="{{ route('admin.docentes.destroy', $docente) }}" method="POST"
+                            onsubmit="return confirm('¿Eliminar docente?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    <a href="{{ route('admin.home') }}" class="btn btn-secondary">Volver</a>
+    <script>
+        document.getElementById('searchDocente').addEventListener('keyup', function () {
+            let filtro = this.value.toLowerCase();
+            let filas = document.querySelectorAll('#docentesTable tr');
 
+            filas.forEach(function (fila) {
+                let nombre = fila.querySelector('.docente-nombre').textContent.toLowerCase();
+                fila.style.display = nombre.includes(filtro) ? '' : 'none';
+            });
+        });
+    </script>
 @endsection

@@ -3,12 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\DocenteController;
-use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\Admin\DocenteController as AdminDocente;
 use App\Http\Controllers\Admin\EstudianteController as AdminEstudiante;
-use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\Admin\CursoController as AdminCurso;
 use App\Http\Controllers\Admin\HorariosController;
+use App\Http\Controllers\Admin\MateriaController as AdminMateria;
+use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\EstudianteController;
+
+use App\Http\Controllers\ScheduleController;
 /*
 |--------------------------------------------------------------------------
 | Rutas Web
@@ -63,7 +66,29 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'admin.estudiantes.update',
         'destroy' => 'admin.estudiantes.destroy',
     ]);
+
+    Route::resource('admin/cursos', AdminCurso::class)->names([
+        'index' => 'admin.cursos.index',
+        'create' => 'admin.cursos.create',
+        'store' => 'admin.cursos.store',
+        'show' => 'admin.cursos.show',
+        'edit' => 'admin.cursos.edit',
+        'update' => 'admin.cursos.update',
+        'destroy' => 'admin.cursos.destroy',
+    ]);
+
+    Route::resource('admin/materias', AdminMateria::class)->names([
+        'index' => 'admin.materias.index',
+        'create' => 'admin.materias.create',
+        'store' => 'admin.materias.store',
+        'show' => 'admin.materias.show',
+        'edit' => 'admin.materias.edit',
+        'update' => 'admin.materias.update',
+        'destroy' => 'admin.materias.destroy',
+    ]);
 });
+
+
 
 // Rutas de schedules
 // Las rutas especificas SIEMPRE van antes del Route::resource

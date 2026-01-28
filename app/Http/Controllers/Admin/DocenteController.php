@@ -11,11 +11,25 @@ use Illuminate\Support\Facades\Hash;
 
 class DocenteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $docentes = User::where('role', 'teacher')->with('subjects')->get();
-        $subjects = Subject::all();
-        return view('admin.docentes.index', compact('docentes', 'subjects'));
+        $query = Teacher::with('user');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($u) use ($search) {
+                        $u->where('email', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $docentes = $query->orderBy('id', 'desc')->get();
+
+        return view('admin.docentes.index', compact('docentes'));
     }
 
     public function create()
@@ -110,6 +124,8 @@ class DocenteController extends Controller
         $docente->user->delete();
         return redirect()->route('admin.docentes.index')->with('success', 'Docente eliminado.');
     }
+
+
 
 
 
