@@ -12,16 +12,6 @@
         </div>
     </div>
 
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <div class="form-card">
         <form action="{{ route('admin.estudiantes.update', $estudiante) }}" method="POST" autocomplete="off">
             @csrf
@@ -83,4 +73,17 @@
         </form>
     </div>
 
+@endsection
+
+@section('scripts')
+    @if(session('success'))
+        <script>
+            alert('{{ session('success') }}');
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            alert('{{ session('error') }}');
+        </script>
+    @endif
 @endsection

@@ -6,16 +6,6 @@
 
         <h1>Crear nuevo docente</h1>
 
-        @if ($errors->any())
-            <div class="form-errors">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form action="{{ route('admin.docentes.store') }}" method="POST" autocomplete="off" class="form-card">
             @csrf
 
@@ -68,4 +58,17 @@
 
     </div>
 
+@endsection
+
+@section('scripts')
+    @if(session('success'))
+        <script>
+            alert('{{ session('success') }}');
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            alert('{{ session('error') }}');
+        </script>
+    @endif
 @endsection

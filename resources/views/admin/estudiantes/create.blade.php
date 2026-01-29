@@ -3,15 +3,7 @@
 @section('content')
     <div class="form-page">
         <h2>Crear Nuevo Estudiante</h2>
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+
         <form action="{{ route('admin.estudiantes.store') }}" method="POST" autocomplete="off">
             <br>
             @csrf
@@ -71,4 +63,17 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    @if(session('success'))
+        <script>
+            alert('{{ session('success') }}');
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            alert('{{ session('error') }}');
+        </script>
+    @endif
 @endsection
