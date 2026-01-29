@@ -8,9 +8,14 @@ use App\Models\Subject;
 
 class MateriaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $subjects = Subject::all();
+        $query = $request->input('query');
+        if ($query) {
+            $subjects = Subject::where('name', 'LIKE', "%{$query}%")->get();
+        } else {
+            $subjects = Subject::all();
+        }
         return view('admin.materias.index', compact('subjects'));
     }
 
@@ -71,12 +76,11 @@ class MateriaController extends Controller
         return redirect()->route('admin.materias.index')->with('success', 'Materia eliminada.');
     }
 
-    // Método de búsqueda
-    public function search(Request $request)
+    public function show($id)
     {
-        $query = $request->input('query');
-        $subjects = Subject::where('name', 'LIKE', "%{$query}%")->get();
-        return view('admin.materias.index', compact('subjects'));
+        $subject = Subject::with(['teachers', 'courses'])->findOrFail($id);
+        return view('admin.materias.show', compact('subject'));
     }
+
 
 }

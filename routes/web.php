@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
         'index' => 'admin.materias.index',
         'create' => 'admin.materias.create',
         'store' => 'admin.materias.store',
+        'show' => 'admin.materias.show',
         'edit' => 'admin.materias.edit',
         'update' => 'admin.materias.update',
         'destroy' => 'admin.materias.destroy',

@@ -466,3 +466,70 @@ body {
 .assign-btn:hover {
     background: #c2d3c9;
 }
+
+.page-headershow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-headershow h1 span {
+    color: #6b1d1d;
+}
+
+.btn-secondary {
+    background-color: #8b5555;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.styled-table thead {
+    background-color: #7f4545;
+    color: white;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f9f2f2;
+}
+
+.course-list {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.course-list li {
+    list-style: disc;
+}
+
+.empty {
+    color: #888;
+    font-style: italic;
+}
+
