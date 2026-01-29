@@ -9,7 +9,7 @@
 
     <div class="login-container">
         <div class="login-card">
-
+            <!-- Logo de la institución -->
             <img src="{{ asset('img/logo.png') }}" class="logo" alt="Logo">
 
             <h2>Iniciar sesión</h2>
@@ -17,15 +17,17 @@
                 Ingresa tu correo electrónico institucional<br>
                 y tu contraseña
             </p>
+            <!-- Mensajes de error y éxito -->
             @if(session('error'))
                 <p class="error">{{ session('error') }}</p>
             @endif
             @if(session('success'))
-                <p class="success">{{ session('Éxito') }}</p>
+                <p class="success">{{ session('success') }}</p>
             @endif
 
+            <!-- Formulario de inicio de sesión -->
             <form method="POST" action="{{ route('login.process') }}" autocomplete="off">
-                @csrf
+                @csrf <!-- Token CSRF para seguridad -->
 
                 <input type="email" name="email" id="email" placeholder="correo.electronico@vr.edu.ec"
                     value="{{ old('email') }}" required>

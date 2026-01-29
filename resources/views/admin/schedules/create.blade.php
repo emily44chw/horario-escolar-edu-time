@@ -1,4 +1,4 @@
-@extends('layouts.app') <!-- Extiende el layout con Bootstrap -->
+@extends('layouts.admin') <!-- Extiende el layout con Bootstrap -->
 
 @section('content')
     <h1>Crear Nuevo Horario</h1>
