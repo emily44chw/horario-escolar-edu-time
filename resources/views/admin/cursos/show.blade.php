@@ -49,7 +49,7 @@
                                 <td>{{ $student->name }}</td>
                                 <td>{{ $student->email }}</td>
                                 <td>
-                                    <form action="{{ route('admin.cursos.students.remove', [$course->id, $student->id]) }}"
+                                    <form action="{{ route('admin.cursos.removeEstudiante', [$course->id, $student->id]) }}"
                                         method="POST" onsubmit="return confirm('¿Quitar estudiante del curso?')">
                                         @csrf
                                         @method('DELETE')
@@ -65,6 +65,34 @@
 
             @else
                 <p class="text-muted">Este curso no tiene estudiantes asignados.</p>
+            @endif
+            <br>
+            <hr>
+            <h2>Materias del curso</h2>
+
+            @if($course->subjects->count())
+
+                <table class="pretty-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre de la materia</th>
+                            <th>Docente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($course->subjects as $i => $subject)
+                            <tr>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $subject->name }}</td>
+                                <td>{{ $subject->teacher->name ?? 'Sin docente asignado' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            @else
+                <p class="text-muted">Este curso no tiene materias asignadas.</p>
             @endif
 
             <div class="form-actions">

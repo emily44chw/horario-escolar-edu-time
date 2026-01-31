@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\User;
-
+use App\Models\Subject;
 class CursoController extends Controller
 {
     public function index()
@@ -64,25 +64,70 @@ class CursoController extends Controller
             ->with('success', 'Curso eliminado');
     }
 
-    // Asignar estudiante a curso
-    public function assignStudent(Request $request, $id)
+    public function assignEstudiantes(Course $course)
     {
-        $request->validate(['student_id' => 'required|exists:users,id']);
-        $course = Course::findOrFail($id);
-        $course->students()->syncWithoutDetaching([$request->student_id]);
-        return redirect()->back()->with('success', 'Estudiante asignado.');
+        $students = User::where('role', 'estudiante')->get();
+
+        $course->load('students');
+
+        // Obtener IDs de estudiantes ya asignados
+        $assignedStudentIds = $course->students->pluck('id')->toArray();
+        // Marcar estudiantes como asignados
+        foreach ($students as $student) {
+            $student->is_assigned = in_array($student->id, $assignedStudentIds);
+        }
+
+        return view(
+            'admin.cursos.assign-estudiantes',
+            compact('course', 'students')
+        );
     }
 
-    // Remover estudiante de curso
-    public function removeStudent(Course $course, User $student)
+    public function removeEstudiante(Course $course, User $student)
     {
         $course->students()->detach($student->id);
 
         return redirect()
-            ->back()
-            ->with('success', 'Estudiante removido del curso');
+            ->route('admin.cursos.index')
+            ->with('success', 'Estudiante removido del curso correctamente');
+    }
+
+    public function storeEstudiantes(Request $request, Course $course)
+    {
+        $request->validate([
+            'students' => 'array'
+        ]);
+
+        // sync = limpia y vuelve a asignar
+        $course->students()->sync($request->students ?? []);
+
+        return redirect()
+            ->route('admin.cursos.index')
+            ->with('success', 'Estudiantes asignados correctamente');
     }
 
 
+    public function assignMaterias(Course $course)
+    {
+        $subjects = Subject::all();
+
+        return view(
+            'admin.cursos.assign-materias',
+            compact('course', 'subjects')
+        );
+    }
+
+    public function storeMaterias(Request $request, Course $course)
+    {
+        $request->validate([
+            'subjects' => 'array'
+        ]);
+
+        $course->subjects()->sync($request->subjects ?? []);
+
+        return redirect()
+            ->route('admin.cursos.index', $course->id)
+            ->with('success', 'Materias asignadas correctamente');
+    }
 
 }

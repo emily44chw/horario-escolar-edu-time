@@ -7,9 +7,11 @@
 
         <div class="page-actions">
             <form method="GET" action="{{ route('admin.cursos.index') }}">
-                <input type="text" id="searchDocente" placeholder="Buscar por el nombre del curso" class="search-input">
+                <input type="text" id="searchCurso" name="search" placeholder="Buscar por el nombre del curso"
+                    class="search-input">
             </form>
-            <a href="{{ route('admin.cursos.create') }}" class="btn btn-primary">
+
+            <a href="{{ route('admin.cursos.create') }}" class="btn-primary">
                 Crear Curso +
             </a>
         </div>
@@ -20,66 +22,49 @@
             <tr>
                 <th>Curso</th>
                 <th>Asignar estudiante</th>
+                <th>Materias</th>
                 <th>Acciones</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach($courses as $course)
                 <tr>
+                    {{-- Curso --}}
                     <td>
                         <strong>{{ $course->name }}</strong>
                     </td>
 
+                    {{-- Asignar estudiante --}}
                     <td>
-                        @if($course->students->count())
-                            <ul class="student-list">
-                                @foreach($course->students as $student)
-                                    <li class="student-item">
-                                        {{ $student->name }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <span class="text-muted">Sin estudiantes</span>
-                        @endif
-
+                        <a href="{{ route('admin.cursos.assignEstudiantes', $course->id) }}" class="btn-assign">
+                            Asignar estudiantes
+                        </a>
                     </td>
 
+
+                    {{-- Asignar materias --}}
                     <td>
-                        <form action="{{ route('admin.cursos.assignStudent', $course->id) }}" method="POST" class="assign-form">
-                            @csrf
-
-                            <div class="assign-box">
-                                <select name="student_id" required>
-                                    <option value="">Asignar estudiante</option>
-                                    @foreach($students as $student)
-                                        <option value="{{ $student->id }}">
-                                            {{ $student->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                <button type="submit" class="assign-btn">
-                                    ➕
-                                </button>
-                            </div>
-                        </form>
-
+                        <a href="{{ route('admin.cursos.assignMaterias', $course->id) }}" class="btn-assign">
+                            Asignar materias
+                        </a>
                     </td>
 
+                    {{-- Acciones --}}
                     <td class="actions">
-                        <a href="{{ route('admin.cursos.show', $course) }}" class="icon-btn view">
+                        <a href="{{ route('admin.cursos.show', $course) }}" class="icon-btn view" title="Ver">
                             <i class="fa-solid fa-eye"></i>
                         </a>
 
-                        <a href="{{ route('admin.cursos.edit', $course) }}" class="icon-btn edit">
+                        <a href="{{ route('admin.cursos.edit', $course) }}" class="icon-btn edit" title="Editar">
                             <i class="fa-solid fa-pen"></i>
                         </a>
 
-                        <form action="{{ route('admin.cursos.destroy', $course) }}" method="POST">
+                        <form action="{{ route('admin.cursos.destroy', $course) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button class="icon-btn delete" onclick="return confirm('¿Eliminar este curso?')">
+
+                            <button class="icon-btn delete" title="Eliminar" onclick="return confirm('¿Eliminar este curso?')">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </form>
@@ -93,13 +78,10 @@
 
 @section('scripts')
     @if(session('success'))
-        <script>
-            alert('{{ session('success') }}');
-        </script>
+        <script>alert('{{ session('success') }}');</script>
     @endif
+
     @if(session('error'))
-        <script>
-            alert('{{ session('error') }}');
-        </script>
+        <script>alert('{{ session('error') }}');</script>
     @endif
 @endsection

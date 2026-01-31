@@ -59,7 +59,7 @@
                                 <span class="text-muted">Sin curso</span>
                             @endif
                         </td>
-                        <td><span class="status active">{{ $estudiante->status }}</span></td>
+                        <td><span class="status {{ $estudiante->status === 'Activo' ? 'status-active' : 'status-inactive' }}">{{ $estudiante->status }}</span></td>
                         <td class="actions">
                             <a href="{{ route('admin.estudiantes.show', $estudiante) }}"><i class="fa-solid fa-user"></i></a>
                             <a href="{{ route('admin.estudiantes.edit', $estudiante) }}"><i class="fa-solid fa-pen"></i></a>

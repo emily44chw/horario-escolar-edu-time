@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Subject;
+use App\Models\Teacher;
 
 class MateriaController extends Controller
 {
@@ -81,6 +82,31 @@ class MateriaController extends Controller
         $subject = Subject::with(['teachers', 'courses'])->findOrFail($id);
         return view('admin.materias.show', compact('subject'));
     }
+
+    public function assignDocentes(Subject $subject)
+    {
+        // Obtener todos los docentes
+        $teachers = Teacher::with('user')->get();
+
+        return view(
+            'admin.materias.assign-docentes',
+            compact('subject', 'teachers')
+        );
+    }
+
+    public function storeDocentes(Request $request, Subject $subject)
+    {
+        $request->validate([
+            'teachers' => 'array'
+        ]);
+
+        $subject->teachers()->sync($request->teachers ?? []);
+
+        return redirect()
+            ->route('admin.materias.index')
+            ->with('success', 'Docentes asignados correctamente');
+    }
+
 
 
 }
