@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="page-header">
-        <h1>Docente</h1>
+        <h1>Docente {{ $docente->first_name }} {{ $docente->last_name }}</h1>
     </div>
 
     <div class="detail-card">

@@ -35,7 +35,8 @@
                     <td>{{ $docente->user ? $docente->user->email : 'Sin email asignado' }}</td>
                     <td>{{ $docente->phone }}</td>
                     <td>
-                        <span class="status active">{{ $docente->status }} </span>
+                        <span
+                            class="status {{ $docente->status === 'Activo' ? 'status-active' : 'status-inactive' }}">{{ $docente->status }}</span>
                     </td>
                     <td class="actions">
                         <a href="{{ route('admin.docentes.show', $docente) }}" title="Ver">

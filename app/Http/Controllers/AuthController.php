@@ -32,7 +32,7 @@ class AuthController extends Controller
             return redirect('/login')->with('error', 'Credenciales inválidas o cuenta inactiva.');
         }
 
-        Auth::login($user);  // Inicia sesión con Laravel
+        Auth::login($user);  // Inicia sesión 
 
         // Redirigir según rol
         return redirect('/' . $user->role . '/home');

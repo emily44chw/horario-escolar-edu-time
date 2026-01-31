@@ -134,9 +134,6 @@ class DocenteController extends Controller
         return redirect()->route('admin.docentes.index')->with('success', 'Docente eliminado.');
     }
 
-
-
-
     // Asignar materia a profesor
     public function assignSubject(Request $request, $id)
     {

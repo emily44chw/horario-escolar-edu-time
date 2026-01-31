@@ -79,11 +79,44 @@ Route::middleware(['auth'])->group(function () {
             'update' => 'admin.cursos.update',
             'destroy' => 'admin.cursos.destroy',
         ]);
-    Route::post('admin/cursos/{id}/assign-student', [AdminCurso::class, 'assignStudent'])->name('admin.cursos.assignStudent');
+
+    // Asignar estudiantes a curso
+    Route::get(
+        'admin/cursos/{course}/assign-estudiantes',
+        [AdminCurso::class, 'assignEstudiantes']
+    )->name('admin.cursos.assignEstudiantes');
+
+    Route::post(
+        'admin/cursos/{course}/store-estudiantes',
+        [AdminCurso::class, 'storeEstudiantes']
+    )->name('admin.cursos.storeEstudiantes');
+    // Remover estudiante de curso
     Route::delete(
-        'admin/cursos/{course}/students/{student}',
-        [AdminCurso::class, 'removeStudent']
-    )->name('admin.cursos.students.remove');
+        'admin/cursos/{course}/remove-estudiante/{student}',
+        [AdminCurso::class, 'removeEstudiante']
+    )->name('admin.cursos.removeEstudiante');
+
+    // Asignar docentes a materias
+    Route::get(
+        'admin/materias/{subject}/assign-docentes',
+        [AdminMateria::class, 'assignDocentes']
+    )->name('admin.materias.assignDocentes');
+
+    Route::post(
+        'admin/materias/{subject}/assign-docentes',
+        [AdminMateria::class, 'storeDocentes']
+    )->name('admin.materias.storeDocentes');
+
+    // Asignar materias a cursos
+    Route::get(
+        'admin/cursos/{course}/assign-materias',
+        [AdminCurso::class, 'assignMaterias']
+    )->name('admin.cursos.assignMaterias');
+
+    Route::post(
+        'admin/cursos/{course}/assign-materias',
+        [AdminCurso::class, 'storeMaterias']
+    )->name('admin.cursos.storeMaterias');
 
     // CRUD Materias
     Route::resource('admin/materias', AdminMateria::class)->names([
@@ -95,9 +128,8 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'admin.materias.update',
         'destroy' => 'admin.materias.destroy',
     ]);
+
 });
-
-
 
 // Rutas de schedules
 // Las rutas especificas SIEMPRE van antes del Route::resource

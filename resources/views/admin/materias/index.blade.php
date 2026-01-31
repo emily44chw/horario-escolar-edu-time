@@ -18,6 +18,7 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Asignación de Docentes</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -25,6 +26,14 @@
             @foreach($subjects as $subject)
                 <tr>
                     <td class="materia-nombre">{{ $subject->name }}</td>
+                    <td>
+                        <div class="assign-center">
+                            <a href="{{ route('admin.materias.assignDocentes', $subject->id) }}" class="btn-assign">
+                                Asignar Docentes
+                            </a>
+                        </div>
+                    </td>
+
                     <td class="actions">
                         <a href="{{ route('admin.materias.show', $subject->id) }}" title="Ver Detalles">
                             <i class="fa-solid fa-eye"></i>
