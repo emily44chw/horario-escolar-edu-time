@@ -40,3 +40,442 @@
     height: 180px;
     object-fit: cover;
 }
+
+/* HOME ESTUDIANTE AGENDA */
+.home-agenda {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.home-header h3 {
+    color: #7a1c2e;
+}
+
+.view-full {
+    font-size: 14px;
+    text-decoration: none;
+    color: #7a1c2e;
+}
+
+.home-agenda-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.home-day {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 120px;
+}
+
+.home-day-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #7a1c2e;
+}
+
+.home-event {
+    background: #ffffff;
+    border-left: 4px solid #7a1c2e;
+    border-radius: 8px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.home-time {
+    font-weight: bold;
+    display: block;
+}
+
+.home-subject {
+    font-size: 12px;
+}
+
+.home-empty {
+    text-align: center;
+    color: #bbb;
+    margin-top: 30px;
+}
+
+/* HORARIO ESTUDIANTE POR DIA*/
+.day-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.day-block {
+    display: flex;
+    background: #ffffff;
+    border-left: 5px solid #6f42c1;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+.info {
+    flex: 1;
+}
+
+.schedule-card-wrapper {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    max-width: 700px;
+    margin: auto;
+}
+
+.schedule-card-header {
+    background: linear-gradient(135deg, #504110, #eeedf3);
+    padding: 16px 20px;
+    color: white;
+}
+
+.schedule-card-header h3 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.schedule-card-body {
+    padding: 20px;
+}
+
+/* bloques horarios */
+.day-block {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+.day-block:hover {
+    background: #eef2ff;
+    transform: translateY(-2px);
+}
+
+.hour {
+    min-width: 110px;
+    font-weight: bold;
+    color: #6f42c1;
+}
+
+.subject {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.teacher {
+    font-size: 13px;
+    color: #666;
+}
+
+/* sin clases */
+.no-classes {
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+/* CALENDARIO SEMANAL ESTUDIANTE */
+
+.calendar-wrapper {
+    position: relative;
+    display: flex;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* HORAS */
+.time-column {
+    width: 80px;
+    background: #f7f7f7;
+    border-right: 1px solid #eee;
+}
+
+.time-header {
+    height: 50px;
+    text-align: center;
+    font-weight: 600;
+    line-height: 50px;
+}
+
+.time-slot {
+    height: 60px;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    padding-top: 6px;
+}
+
+/* DIAS */
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+}
+
+.day-column {
+    position: relative;
+    border-right: 1px solid #eee;
+}
+
+.day-header {
+    height: 50px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 50px;
+    background: #fafafa;
+}
+
+.day-body {
+    position: relative;
+    height: 420px; /* 7:00 a 13:30 */
+}
+
+.event {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    background: linear-gradient(135deg, #7c92d9, #7c90b2);
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12px;
+    cursor: pointer;
+
+    /* Animación suave */
+    transition: 
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
+}
+
+/* HOVER */
+.event:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+    filter: brightness(1.08);
+    z-index: 10;
+}
+
+.event strong {
+    display: block;
+    font-size: 13px;
+}
+
+.event small {
+    display: block;
+    opacity: 0.9;
+}
+
+.event span {
+    font-size: 11px;
+    opacity: 0.85;
+}
+.recess-row {
+    position: absolute;
+    left: 90px; 
+    right: 16px;
+    background: #aacce0;
+    color: #000000;
+    font-weight: 700;
+    text-align: center;
+    line-height: 60px;
+    border-radius: 10px;
+    z-index: 2;
+    opacity: 0.9;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px #94b4c7;
+}
+
+/* PAGINA CURSOS ESTUDIANTE */
+.course-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.course-header h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #4a2c2a;
+}
+
+/* GRID DE MATERIAS */
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.subject-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+    transition: all .25s ease;
+}
+
+.subject-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0,0,0,.15);
+}
+
+/* TEXTO */
+.subject-name {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+.subject-teacher {
+    font-size: 14px;
+    color: #666;
+}
+
+.no-subjects {
+    text-align: center;
+    color: #888;
+}
+
+.subject-card.blue    { border-top: 5px solid #3b82f6; }
+.subject-card.green   { border-top: 5px solid #22c55e; }
+.subject-card.purple  { border-top: 5px solid #8b5cf6; }
+.subject-card.orange  { border-top: 5px solid #f97316; }
+.subject-card.red     { border-top: 5px solid #ef4444; }
+.subject-card.teal    { border-top: 5px solid #14b8a6; }
+.subject-card.pink    { border-top: 5px solid #ec4899; }
+.subject-card.indigo  { border-top: 5px solid #6366f1; }
+.subject-card.yellow  { border-top: 5px solid #eab308; }
+.subject-card.cyan    { border-top: 5px solid #06b6d4; }
+.subject-card.lime    { border-top: 5px solid #84cc16; }
+.subject-card.rose    { border-top: 5px solid #f43f5e; }
+
+
+.course-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.course-meta {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 14px;
+    color: #555;
+}
+
+.course-meta .label {
+    font-weight: 600;
+    color: #777;
+}
+
+.course-meta .value {
+    font-weight: 700;
+    color: #333;
+}
+
+.course-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.period {
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.subject-count {
+    display: inline-block;
+    background: #f3f5ff;
+    color: #4f46e5;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* PERFIL ESTUDIANTE */
+
+.profile-card {
+    max-width: 420px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+.profile-card h4 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #4f46e5;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #4f46e5;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(79,70,229,.4);
+}

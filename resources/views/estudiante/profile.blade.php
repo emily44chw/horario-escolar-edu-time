@@ -1,48 +1,49 @@
-@extends('layouts.app')
+@extends('layouts.student')
 
 @section('content')
-    <div class="container estudiante-dashboard">
 
-        <h2 class="mb-4">Bienvenido {{ auth()->user()->name }}</h2>
+    <h2 class="page-title">
+        <i class="fas fa-user-circle"></i> Mi perfil
+    </h2>
 
-        <div class="row">
+    <div class="profile-card">
 
-            <!-- HORARIOS -->
-            <div class="col-md-4">
-                <div class="card dashboard-card">
-                    <img src="{{ asset('img/horarios.jpg') }}" class="card-img-top" alt="Horarios">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Mis Horarios</h5>
-                        <p class="card-text">Consulta tus clases y horarios.</p>
-                        <a href="#" class="btn btn-primary">Ver Horarios</a>
-                    </div>
-                </div>
+        <h4>Cambiar contraseña</h4>
+
+        <form method="POST" action="{{ route('estudiante.profile.update') }}">
+            @csrf
+            @method('PUT')
+
+            <div class="form-group">
+                <label>Contraseña actual</label>
+                <input type="password" name="current_password" required>
             </div>
 
-            <!-- CURSOS -->
-            <div class="col-md-4">
-                <div class="card dashboard-card">
-                    <img src="{{ asset('img/cursos.jpg') }}" class="card-img-top" alt="Cursos">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Mis Cursos</h5>
-                        <p class="card-text">Materias en las que estás inscrito.</p>
-                        <a href="#" class="btn btn-success">Ver Cursos</a>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label>Nueva contraseña</label>
+                <input type="password" name="password" required>
             </div>
 
-            <!-- PERFIL -->
-            <div class="col-md-4">
-                <div class="card dashboard-card">
-                    <img src="{{ asset('img/perfil.jpg') }}" class="card-img-top" alt="Perfil">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Mi Perfil</h5>
-                        <p class="card-text">Actualiza tu contraseña.</p>
-                        <a href="#" class="btn btn-dark">Mi Perfil</a>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label>Confirmar nueva contraseña</label>
+                <input type="password" name="password_confirmation" required>
             </div>
 
-        </div>
+            <button class="btn-primary">
+                Actualizar contraseña
+            </button>
+        </form>
+
     </div>
+
+@endsection
+
+@section('scripts')
+    @if(session('success'))
+        <script>alert('{{ session('success') }}');</script>
+    @endif
+
+    @if(session('error'))
+        <script>alert('{{ session('error') }}');</script>
+    @endif
 @endsection
