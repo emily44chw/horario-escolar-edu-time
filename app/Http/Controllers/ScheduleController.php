@@ -66,10 +66,17 @@ class ScheduleController extends Controller
 
         $slots = [];
         for ($hour = $startHour; $hour < $endHour; $hour++) {
+
+            // Para recreo - 9 a 10 (no se genera)
+            if ($hour == 9) {
+                continue;
+            }
+
             $startTime = sprintf('%02d:00', $hour);
             $endTime = sprintf('%02d:00', $hour + 1);
             $slots[] = ['start' => $startTime, 'end' => $endTime];
         }
+
 
         \Log::info('Slots generados', $slots);
         return response()->json(array_values($slots));
