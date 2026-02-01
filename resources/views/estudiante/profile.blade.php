@@ -1,4 +1,4 @@
-@extends('layouts.student')
+@extends('layouts.app')
 
 @section('content')
     <div class="container estudiante-dashboard">
@@ -14,7 +14,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Mis Horarios</h5>
                         <p class="card-text">Consulta tus clases y horarios.</p>
-                        <a href="{{ route('estudiante.horarios') }}" class="btn btn-primary">Ver Horarios</a>
+                        <a href="#" class="btn btn-primary">Ver Horarios</a>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Mis Cursos</h5>
                         <p class="card-text">Materias en las que estás inscrito.</p>
-                        <a href="{{ route('estudiante.cursos') }}" class="btn btn-success">Ver Cursos</a>
+                        <a href="#" class="btn btn-success">Ver Cursos</a>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Mi Perfil</h5>
                         <p class="card-text">Actualiza tu contraseña.</p>
-                        <a href="{{ route('estudiante.profile') }}" class="btn btn-dark">Mi Perfil</a>
+                        <a href="#" class="btn btn-dark">Mi Perfil</a>
                     </div>
                 </div>
             </div>

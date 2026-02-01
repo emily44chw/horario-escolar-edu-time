@@ -1,0 +1,42 @@
+/* NAVBAR ESTUDIANTE */
+.estudiante-navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.estudiante-navbar .navbar-brand {
+    color: #2563eb;
+    font-size: 1.4rem;
+}
+
+.estudiante-navbar .nav-link {
+    color: #374151;
+    font-weight: 500;
+    margin-left: 15px;
+}
+
+.estudiante-navbar .nav-link:hover {
+    color: #2563eb;
+}
+
+
+/* DASHBOARD ESTUDIANTE */
+.estudiante-dashboard {
+    margin-top: 30px;
+}
+
+.dashboard-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.dashboard-card img {
+    height: 180px;
+    object-fit: cover;
+}

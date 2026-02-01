@@ -30,11 +30,7 @@ class Students extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(User::class, 'student_courses', 'student_id', 'course_id');
-    }
-    public function classroom()
-    {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsToMany(Course::class, 'student_courses', 'student_id', 'course_id');
     }
 
     // Accessor opcional para nombre completo
