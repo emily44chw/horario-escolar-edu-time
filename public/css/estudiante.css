@@ -5,9 +5,16 @@
 }
 
 .estudiante-navbar .navbar-brand {
-    color: #2563eb;
+    color: #000000;
     font-size: 1.4rem;
 }
+.estudiante-navbar .navbar-brand {
+    animation: color-change 5s infinite;
+}
+@keyframes color-change {
+    0% { color: #000000; }
+    50% { color: #7c3aed; }
+    100% { color: #000000; } }
 
 .estudiante-navbar .nav-link {
     color: #374151;
@@ -16,7 +23,7 @@
 }
 
 .estudiante-navbar .nav-link:hover {
-    color: #2563eb;
+    color: #aa70bd;
 }
 
 
@@ -40,165 +47,94 @@
     height: 180px;
     object-fit: cover;
 }
-
-/* HOME ESTUDIANTE AGENDA */
-.home-agenda {
-    background: #fff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+.horizontal-card {
+    transition: all .3s ease;
+    border-radius: 14px;
 }
 
-.home-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+.horizontal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,.12);
 }
 
-.home-header h3 {
-    color: #7a1c2e;
+.dashboard-icon {
+    font-size: 2.5rem;
+    color: #cfc2db;
 }
 
-.view-full {
-    font-size: 14px;
-    text-decoration: none;
-    color: #7a1c2e;
+.dashboard-card h5 {
+    margin-bottom: 4px;
 }
 
-.home-agenda-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-}
-
-.home-day {
-    background: #f9fafb;
-    border-radius: 12px;
-    padding: 10px;
-    min-height: 120px;
-}
-
-.home-day-title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: #7a1c2e;
-}
-
-.home-event {
-    background: #ffffff;
-    border-left: 4px solid #7a1c2e;
-    border-radius: 8px;
-    padding: 6px 8px;
+.dashboard-card p {
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: .9rem;
+    color: #6b7280;
+}
+.dashboard-card {
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all .25s ease;
 }
 
-.home-time {
-    font-weight: bold;
-    display: block;
+.dashboard-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0,0,0,.15);
 }
 
-.home-subject {
-    font-size: 12px;
+.dashboard-card img {
+    height: 180px;
+    object-fit: cover;
 }
 
-.home-empty {
-    text-align: center;
-    color: #bbb;
-    margin-top: 30px;
-}
+
 
 /* HORARIO ESTUDIANTE POR DIA*/
-.day-view {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.day-block {
-    display: flex;
+.today-mini-card {
     background: #ffffff;
-    border-left: 5px solid #6f42c1;
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    max-width: 420px;
 }
 
-.info {
-    flex: 1;
-}
-
-.schedule-card-wrapper {
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    max-width: 700px;
-    margin: auto;
-}
-
-.schedule-card-header {
-    background: linear-gradient(135deg, #504110, #eeedf3);
-    padding: 16px 20px;
-    color: white;
-}
-
-.schedule-card-header h3 {
-    margin: 0;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.schedule-card-body {
-    padding: 20px;
-}
-
-/* bloques horarios */
-.day-block {
-    display: flex;
-    align-items: center;
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-    transition: all 0.2s ease;
-}
-
-.day-block:hover {
-    background: #eef2ff;
-    transform: translateY(-2px);
-}
-
-.hour {
-    min-width: 110px;
-    font-weight: bold;
-    color: #6f42c1;
-}
-
-.subject {
-    font-size: 15px;
+.mini-header {
     font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.teacher {
-    font-size: 13px;
-    color: #666;
-}
-
-/* sin clases */
-.no-classes {
-    background: #fff3cd;
-    color: #856404;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
+.mini-item {
+    display: flex;
+    gap: 12px;
     font-size: 14px;
+    padding: 6px 0;
+    border-bottom: 1px dashed #eee;
 }
+
+.mini-item:last-child {
+    border-bottom: none;
+}
+
+.mini-hour {
+    font-weight: 600;
+    color: #555;
+    min-width: 45px;
+}
+
+.mini-subject {
+    color: #444;
+}
+
+.mini-empty {
+    font-size: 14px;
+    color: #999;
+}
+
 
 
 /* CALENDARIO SEMANAL ESTUDIANTE */
@@ -306,7 +242,7 @@
     color: #000000;
     font-weight: 700;
     text-align: center;
-    line-height: 60px;
+    line-height: 40px;
     border-radius: 10px;
     z-index: 2;
     opacity: 0.9;

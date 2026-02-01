@@ -4,7 +4,31 @@
 
     <div class="container estudiante-dashboard">
 
-        <h2 class="mb-4">Bienvenido {{ auth()->user()->name }}</h2>
+        <h1 class="mb-4">Bienvenido {{ auth()->user()->name }}</h1>
+        <div class="today-mini-card">
+            <div class="mini-header">
+                <i class="fas fa-clock"></i>
+                <span>Horario de hoy — {{ $today }}</span>
+            </div>
+            <div id="clock" class="dashboard-clock mb-4"></div>
+
+            @if($schedulesToday->isEmpty())
+                <div class="mini-empty">
+                    Hoy no tienes clases
+                </div>
+            @else
+                @foreach($schedulesToday as $schedule)
+                    <div class="mini-item">
+                        <span class="mini-hour">
+                            {{ substr($schedule->start_time, 0, 5) }}
+                        </span>
+                        <span class="mini-subject">
+                            {{ $schedule->subject->name }}
+                        </span>
+                    </div>
+                @endforeach
+            @endif
+        </div>
 
         <div class="row">
 
@@ -15,7 +39,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Mis Horarios</h5>
                         <p class="card-text">Consulta tus clases y horarios.</p>
-                        <a href="{{ route('estudiante.horarios') }}" class="btn btn-primary">Ver Horarios</a>
+                        <a href="{{ route('estudiante.horarios') }}" class="btn btn-dark">Ver Horarios</a>
                     </div>
                 </div>
             </div>
@@ -27,7 +51,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Mis Cursos</h5>
                         <p class="card-text">Materias en las que estás inscrito.</p>
-                        <a href="{{ route('estudiante.cursos') }}" class="btn btn-success">Ver Cursos</a>
+                        <a href="{{ route('estudiante.cursos') }}" class="btn btn-dark">Ver Cursos</a>
                     </div>
                 </div>
             </div>
@@ -44,50 +68,22 @@
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <div class="schedule-card-wrapper">
-
-            <div class="schedule-card-header">
-                <h3>
-                    <i class="fas fa-calendar-day"></i>
-                    Mi horario de hoy — {{ $today }}
-                </h3>
-            </div>
-
-            <div class="schedule-card-body">
-
-                @if($schedulesToday->isEmpty())
-                    <div class="no-classes">
-                        <i class="fas fa-exclamation-circle"></i>
-                        Hoy no tienes clases
-                    </div>
-                @else
-                    <div class="day-view">
-                        @foreach($schedulesToday as $schedule)
-                            <div class="day-block">
-                                <div class="hour">
-                                    {{ substr($schedule->start_time, 0, 5) }} -
-                                    {{ substr($schedule->end_time, 0, 5) }}
-                                </div>
-
-                                <div class="info">
-                                    <div class="subject">
-                                        {{ $schedule->subject->name }}
-                                    </div>
-                                    <div class="teacher">
-                                        <i class="fas fa-user"></i>
-                                        {{ $schedule->teacher->name ?? 'Docente no asignado' }}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-
-            </div>
-        </div>
-
-
     </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            document.getElementById('clock').innerText =
+                `${hours}:${minutes}:${seconds}`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+
 @endsection

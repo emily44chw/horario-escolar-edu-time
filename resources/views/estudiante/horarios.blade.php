@@ -20,11 +20,11 @@
 
         <!-- DIAS -->
         @php
-            $days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+            $days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
         @endphp
         <div class="days-grid">
             {{-- RECREO --}}
-            <div class="recess-row" style="top: 180px; height: 60px;">
+            <div class="recess-row" style="top: 180px; height: 40px;">
                 <i class="fas fa-coffee"></i> RECREO
             </div>
 

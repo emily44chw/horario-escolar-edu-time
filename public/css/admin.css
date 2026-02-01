@@ -13,17 +13,20 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 150px;
+    position: fixed;
+    width: 190px;
     background: #ffffff;
     border-right: 1px solid #e5e7eb;
     padding: 25px;
     height: 100vh;
     left: 0;
     top:0;
-    position: fixed;
+    
 }
 
 .sidebar h2 {
+    font-size: 22px;
+    font-weight: 700;
     margin-bottom: 30px;
 }
 
