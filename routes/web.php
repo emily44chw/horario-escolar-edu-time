@@ -35,7 +35,6 @@ Route::middleware(['auth'])->group(function () {
     // Home por rol
     Route::get('/admin/home', [AdminController::class, 'index'])->name('admin.home');
     Route::get('/docente/home', [DocenteController::class, 'index'])->name('docente.home');
-    Route::get('/estudiante/home', [EstudianteController::class, 'index'])->name('estudiante.home');
 
     // Para estudiantes
     Route::post('admin/estudiantes/{id}/assign-course', [AdminEstudiante::class, 'assignCourse'])->name('admin.estudiantes.assignCourse');
@@ -130,6 +129,27 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
 });
+
+//Rutas para el rol de estudiante
+
+Route::middleware(['auth', 'role:estudiante'])->prefix('estudiante')->group(function () {
+
+    Route::get('/home', [EstudianteController::class, 'home'])
+        ->name('estudiante.home');
+
+    Route::get('/horarios', [EstudianteController::class, 'horarios'])
+        ->name('estudiante.horarios');
+
+    Route::get('/cursos', [EstudianteController::class, 'cursos'])
+        ->name('estudiante.cursos');
+
+    Route::get('/perfil', [EstudianteController::class, 'profile'])
+        ->name('estudiante.profile');
+
+    Route::put('/perfil', [EstudianteController::class, 'updatePassword'])
+        ->name('estudiante.profile.update');
+});
+
 
 // Rutas de schedules
 // Las rutas especificas SIEMPRE van antes del Route::resource
