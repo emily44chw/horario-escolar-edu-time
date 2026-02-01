@@ -82,8 +82,6 @@ class ScheduleController extends Controller
         return response()->json(array_values($slots));
     }
 
-
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -99,6 +97,7 @@ class ScheduleController extends Controller
 
         $savedSchedules = [];
 
+        // Guardar cada asignación
         foreach ($data['assignments'] as $a) {
             $schedule = Schedule::create([
                 'course_id' => $data['course_id'],
@@ -108,16 +107,76 @@ class ScheduleController extends Controller
                 'day' => $a['day'],
                 'start_time' => $a['start_time'],
                 'end_time' => $a['end_time'],
-                'status' => 'pending',
+                'status' => 'incompleto', // inicial
             ]);
 
             $savedSchedules[] = $schedule;
         }
 
+        $courseSchedules = Schedule::where('course_id', $data['course_id'])->get();
+        $totalHoras = $courseSchedules->count();
+        $expectedHoras = 5 * $courseSchedules->pluck('start_time')->unique()->count(); // 5 días * horas únicas
+
+        $status = $totalHoras >= $expectedHoras ? 'completo' : 'incompleto';
+        Schedule::where('course_id', $data['course_id'])->update(['status' => $status]);
+        // ----------------------------------------------------
+
         return response()->json([
             'success' => 'Se guardaron ' . count($savedSchedules) . ' asignaciones.',
             'data' => $savedSchedules
         ]);
+    }
+
+    public function update(Request $request, $courseId)
+    {
+        // Validar que llegue assignments
+        $request->validate([
+            'assignments' => 'required|array',
+        ]);
+
+        $savedSchedules = [];
+
+        // Primero borramos horarios anteriores del curso
+        Schedule::where('course_id', $courseId)->delete();
+
+        // Recorrer todas las asignaciones
+        foreach ($request->assignments as $day => $hours) {
+            foreach ($hours as $hour => $hourAssignmentJson) {
+
+                // Saltar si está vacío
+                if (empty($hourAssignmentJson)) {
+                    continue;
+                }
+
+                // Decodificar el JSON del <option>
+                $hourAssignment = json_decode($hourAssignmentJson, true);
+
+                // Crear nuevo registro
+                $schedule = Schedule::create([
+                    'course_id' => $courseId,
+                    'subject_id' => $hourAssignment['subject_id'],
+                    'teacher_id' => $hourAssignment['teacher_id'] ?? null,
+                    'classroom_id' => $hourAssignment['classroom_id'] ?? null,
+                    'day' => $hourAssignment['day'],
+                    'start_time' => $hourAssignment['start_time'],
+                    'end_time' => $hourAssignment['end_time'],
+                    'status' => 'incompleto', // luego se actualizará
+                ]);
+
+                $savedSchedules[] = $schedule;
+            }
+        }
+
+        // --- Actualizar status del curso ---
+        $courseSchedules = Schedule::where('course_id', $courseId)->get();
+        $totalHoras = $courseSchedules->count();
+        $expectedHoras = 5 * $courseSchedules->pluck('start_time')->unique()->count(); // 5 días * horas únicas
+
+        $status = $totalHoras >= $expectedHoras ? 'completo' : 'incompleto';
+        Schedule::where('course_id', $courseId)->update(['status' => $status]);
+
+        return redirect()->route('admin.horarios.show', $courseId)
+            ->with('success', 'Horario actualizado correctamente.');
     }
 
     public function getSelectedSchedule(Request $request)

@@ -166,4 +166,8 @@ Route::prefix('admin')->middleware(['role:admin'])->group(function () {
     Route::get('horarios', [HorariosController::class, 'index'])->name('admin.horarios.index');
     Route::get('horarios/crear', [HorariosController::class, 'create'])->name('admin.horarios.create');
     Route::get('horarios/creaciones', [HorariosController::class, 'list'])->name('admin.horarios.list');
+    Route::get('horarios/{course}/ver', [HorariosController::class, 'show'])->name('admin.horarios.show');
+    Route::get('horarios/{course}/editar', [HorariosController::class, 'edit'])->name('admin.horarios.edit');
+    Route::delete('horarios/{course}', [HorariosController::class, 'destroy'])->name('admin.horarios.destroy');
+
 });
