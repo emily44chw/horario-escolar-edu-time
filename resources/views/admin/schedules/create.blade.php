@@ -2,6 +2,12 @@
 
 @section('content')
     <h1>Crear Nuevo Horario</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ route('admin.horarios.index') }}" class="btn btn-secondary">
+            ← Volver a Gestión de Horarios
+        </a>
+    </div>
+
     <p>Selecciona un curso para comenzar. Si el curso ya tiene horario, no podrás crear uno nuevo.</p>
 
     <!-- Campo para seleccionar curso (lista desplegable) -->
